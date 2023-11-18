@@ -5,11 +5,15 @@
  */
 package com.commercial.gestion.model;
 
+import com.commercial.gestion.BDDIante.BDD;
+
+import java.util.ArrayList;
+
 /**
  *
  * @author BEST
  */
-public class Article
+public class Article extends BDD
 {
     int idArticle;
     String nom;
@@ -38,5 +42,51 @@ public class Article
     public void setDescriptionArticle(String descriptionArticle) {
         this.descriptionArticle = descriptionArticle;
     }
-    
+
+/////////////////////////////////////////////////////////////
+public ArrayList<Article> allArticle()
+{
+    Article article=new Article();
+    ArrayList<String[]> allArticleBDD=article.select();
+    ArrayList<Article> allArticle=new ArrayList<Article>();
+    for(int i=0;i<allArticleBDD.size();i++)
+    {
+        Article a=new Article();
+        a.setIdArticle(Integer.parseInt(allArticleBDD.get(i)[0]));
+        a.setNom(allArticleBDD.get(i)[1]);
+        a.setDescriptionArticle(allArticleBDD.get(i)[2]);
+        allArticle.add(a);
+
+    }
+    return allArticle;
+}
+/////////////////////////////////////////////////////////////
+public Article getArticleById(int idArticle)
+{
+    Article a=new Article();
+    String condition="idArticle= "+idArticle;
+    ArrayList<String[]> allArticleBDD=a.select();
+    for(int i=0;i<allArticleBDD.size();i++)
+    {
+
+        a.setIdArticle(Integer.parseInt(allArticleBDD.get(i)[0]));
+        a.setNom(allArticleBDD.get(i)[1]);
+        a.setDescriptionArticle(allArticleBDD.get(i)[2]);
+
+    }
+    return a;
+}
+/////////////////////////////////////////////////////////////
+public boolean insertArticle(String nom,String descriptionArticle)
+{
+    boolean insert =false;
+    Article article=new Article();
+    article.setNom(nom);
+    article.setDescriptionArticle(descriptionArticle);
+    article.dontSave("idArticle");
+    article.save();
+    insert=true;
+    return insert;
+}
+/////////////////////////////////////////////////////////////
 }

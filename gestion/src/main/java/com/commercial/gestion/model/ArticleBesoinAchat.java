@@ -5,11 +5,15 @@
  */
 package com.commercial.gestion.model;
 
+import com.commercial.gestion.BDDIante.BDD;
+
+import java.util.ArrayList;
+
 /**
  *
  * @author BEST
  */
-public class ArticleBesoinAchat 
+public class ArticleBesoinAchat extends BDD
 {
    int idArticleBesoinAchat;
    int idArticle;
@@ -65,5 +69,20 @@ public class ArticleBesoinAchat
     public void setDescriptionArticleBesoin(String descriptionArticleBesoin) {
         this.descriptionArticleBesoin = descriptionArticleBesoin;
     }
-   
+////////////////////////////////////////////////////////////
+public static ArticleBesoinAchat getArticleBesoinAchatById(int idArticleBesoinAchat) {
+    ArticleBesoinAchat a = new ArticleBesoinAchat();
+    String condition = "";
+    ArrayList<String[]> allArticleBDD = a.select();
+    for (int i = 0; i < allArticleBDD.size(); i++) {
+
+        a.setIdArticleBesoinAchat(Integer.parseInt(allArticleBDD.get(i)[0]));
+        a.setIdArticle(Integer.parseInt(allArticleBDD.get(i)[1]));
+        a.setIdBesoinAchat(Integer.parseInt(allArticleBDD.get(i)[2]));
+        a.setQuantite(Double.parseDouble(allArticleBDD.get(i)[3]));
+        a.setIdUnite(Integer.parseInt(allArticleBDD.get(i)[4]));
+        a.setDescriptionArticleBesoin(allArticleBDD.get(i)[5]);
+    }
+    return a;
+}
 }

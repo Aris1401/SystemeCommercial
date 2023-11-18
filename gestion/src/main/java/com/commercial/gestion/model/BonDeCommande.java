@@ -5,13 +5,15 @@
  */
 package com.commercial.gestion.model;
 
+import com.commercial.gestion.BDDIante.BDD;
+
 import java.sql.Timestamp;
 
 /**
  *
  * @author BEST
  */
-public class BonDeCommande 
+public class BonDeCommande extends BDD
 {
     int idBonDeCommande;
     String titre;
@@ -91,9 +93,27 @@ public class BonDeCommande
         return montantTotal;
     }
 
-    public void setMontantTotal(double montantTotal) {
-        this.montantTotal = montantTotal;
-    }
-    
-    
+    public void setMontantTotal(double montantTotal) {this.montantTotal = montantTotal;}
+
+ ////////////////////////////////////////////////////////////////////
+ public boolean insertBonDeCommande(String titre,String dateDeCreation,String idFournisseur,
+                                    String idBesoinAchat,String dateLivraison,String idModeDePaiement,
+                                    String conditionDePaiement,String montantTotal)
+ {
+     boolean insert=false;
+    BonDeCommande bonDeCommande=new BonDeCommande();
+     bonDeCommande.setTitre(titre);
+     bonDeCommande.setDateCreation(Timestamp.valueOf(dateDeCreation));
+     bonDeCommande.setIdFournisseur(Integer.parseInt(idFournisseur));
+     bonDeCommande.setIdBesoinAchat(Integer.parseInt(idBesoinAchat));
+     bonDeCommande.setDateLivraison(Timestamp.valueOf(dateLivraison));
+     bonDeCommande.setIdModeDePaiement(Integer.parseInt(idModeDePaiement));
+     bonDeCommande.setConditionDePaiement(conditionDePaiement);
+     bonDeCommande.setMontantTotal(Double.parseDouble(montantTotal));
+     bonDeCommande.dontSave("idBonDeCommande");
+     bonDeCommande.save();
+     insert=true;
+     return insert;
+ }
+    ////////////////////////////////////////////////////////////////////
 }

@@ -5,13 +5,15 @@
  */
 package com.commercial.gestion.model;
 
+import com.commercial.gestion.BDDIante.BDD;
+
 import java.sql.Timestamp;
 
 /**
  *
  * @author BEST
  */
-public class DemandeProforma 
+public class DemandeProforma extends BDD
 {
      int idDemandeProforma;
      int idArticleBesoinAchat;
@@ -58,5 +60,22 @@ public class DemandeProforma
     public void setStatusDemande(int statusDemande) {
         this.statusDemande = statusDemande;
     }
-     
+
+
+ public boolean insertDemandeProforma(String idArticleBesoinAchat,String dateDemande,String idFournisseur,String statusDemande)
+ {
+     boolean insert=false;
+
+     DemandeProforma demande=new DemandeProforma();
+     demande.setIdArticleBesoinAchat(Integer.parseInt(idArticleBesoinAchat));
+     demande.setDateDemande(Timestamp.valueOf(dateDemande));
+     demande.setIdFournisseur(Integer.parseInt(idFournisseur));
+     demande.setStatusDemande(Integer.parseInt(statusDemande));
+     demande.dontSave("idDemandeProforma");
+     demande.save();
+     insert=true;
+     return insert;
+
+ }
+    /////////////////////////////////////////////////////////
 }

@@ -5,13 +5,16 @@
  */
 package com.commercial.gestion.model;
 
+import com.commercial.gestion.BDDIante.BDD;
+
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 /**
  *
  * @author BEST
  */
-public class Proforma
+public class Proforma extends BDD
 {
     int idProforma;
     int idFournisseur;
@@ -67,5 +70,62 @@ public class Proforma
     public void setIdArticle(int idArticle) {
         this.idArticle = idArticle;
     }
-    
+////////////////////////////////////////////////////////////////////////////
+public ArrayList<Proforma> allProforma()
+{
+    Proforma proforma=new Proforma();
+    ArrayList<String[]> allProformaBDD=proforma.select();
+    ArrayList<Proforma> allProforma=new ArrayList<Proforma>();
+    for(int i=0;i< allProformaBDD.size();i++)
+    {
+        Proforma p=new Proforma();
+        p.setIdProforma(Integer.parseInt(allProformaBDD.get(i)[0]));
+        p.setIdFournisseur(Integer.parseInt(allProformaBDD.get(i)[1]));
+        p.setDateObtention(Timestamp.valueOf(allProformaBDD.get(i)[2]));
+        p.setPrixUnitaire(Double.parseDouble(allProformaBDD.get(i)[3]));
+        p.setQuantite(Double.parseDouble(allProformaBDD.get(i)[4]));
+        p.setIdArticle(Integer.parseInt(allProformaBDD.get(i)[5]));
+
+        allProforma.add(p);
+    }
+      return allProforma;
+}
+////////////////////////////////////////////////////////////////////////////
+public ArrayList<Proforma> allProformaForArticle(int idArticle)
+{
+    Proforma proforma=new Proforma();
+    String condition="idArticle="+idArticle;
+    ArrayList<String[]> allProformaBDD=proforma.select(condition);
+    ArrayList<Proforma> allProforma=new ArrayList<Proforma>();
+    for(int i=0;i< allProformaBDD.size();i++)
+    {
+        Proforma p=new Proforma();
+        p.setIdProforma(Integer.parseInt(allProformaBDD.get(i)[0]));
+        p.setIdFournisseur(Integer.parseInt(allProformaBDD.get(i)[1]));
+        p.setDateObtention(Timestamp.valueOf(allProformaBDD.get(i)[2]));
+        p.setPrixUnitaire(Double.parseDouble(allProformaBDD.get(i)[3]));
+        p.setQuantite(Double.parseDouble(allProformaBDD.get(i)[4]));
+        p.setIdArticle(Integer.parseInt(allProformaBDD.get(i)[5]));
+
+        allProforma.add(p);
+    }
+    return allProforma;
+}
+////////////////////////////////////////////////////////////////////////////
+public boolean insertProforma(String idFournisseur,String dateObtention,String priUnitaire,String quantite,String idArticle)
+{
+    boolean insert=false;
+
+    Proforma p=new Proforma();
+    p.setIdFournisseur(Integer.parseInt(idFournisseur));
+    p.setDateObtention(Timestamp.valueOf(dateObtention));
+    p.setPrixUnitaire(Double.parseDouble(priUnitaire));
+    p.setQuantite(Double.parseDouble(quantite));
+    p.setIdArticle(Integer.parseInt(idArticle));
+    p.dontSave("idProforma");
+    p.save();
+    insert=true;
+    return insert;
+}
+////////////////////////////////////////////////////////////////////////////
 }
