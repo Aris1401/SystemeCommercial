@@ -6,7 +6,10 @@
 package com.commercial.gestion.model;
 
 import com.commercial.gestion.BDDIante.BDD;
+import com.commercial.gestion.aris.bdd.generic.GenericDAO;
+import com.commercial.gestion.dbAccess.ConnectTo;
 
+import java.sql.Connection;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
@@ -70,7 +73,8 @@ public class Proforma extends BDD
     public void setIdArticle(int idArticle) {
         this.idArticle = idArticle;
     }
-////////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////
 public ArrayList<Proforma> allProforma()
 {
     Proforma proforma=new Proforma();
@@ -91,6 +95,9 @@ public ArrayList<Proforma> allProforma()
       return allProforma;
 }
 ////////////////////////////////////////////////////////////////////////////
+    public Fournisseur getFournisseur() {
+        return Fournisseur.getFournisseurById(idFournisseur);
+    }
 public ArrayList<Proforma> allProformaForArticle(int idArticle)
 {
     Proforma proforma=new Proforma();
@@ -127,6 +134,36 @@ public boolean insertProforma(String idFournisseur,String dateObtention,String p
     insert=true;
     return insert;
 }
+
+////////////////////////////////////////////////////////////////////////////
+    public static ArrayList<Proforma> obtenirProformaBesoinArticle(int idArticleBesoinAchat){
+        ArrayList<Proforma> proformas = new ArrayList<>();
+        try {
+            Connection c = ConnectTo.postgreS();
+
+            GenericDAO<ProformaArticleBesoinAchat> proformaArticleBesoinAchatGenericDAO = new GenericDAO<>(ProformaArticleBesoinAchat.class);
+            proformaArticleBesoinAchatGenericDAO.addToSelection("idArticleBesoinAchat", idArticleBesoinAchat, "");
+
+            ArrayList<ProformaArticleBesoinAchat> proformaArticleBesoinAchats = proformaArticleBesoinAchatGenericDAO.getFromDatabase(c);
+
+            for (ProformaArticleBesoinAchat proformaArticleBesoinAchat : proformaArticleBesoinAchats) {
+                GenericDAO<Proforma> proformaGenericDAO = new GenericDAO<>(Proforma.class);
+                proformaGenericDAO.addToSelection("idProforma", proformaArticleBesoinAchat.getIdProforma(), "");
+
+                ArrayList<Proforma> proformas1 = proformaGenericDAO.getFromDatabase(c);
+                if (proformas1.isEmpty()) continue;
+
+                proformas.add(proformas1.get(0));
+            }
+
+            c.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return proformas;
+    }
+
 //////////////////////////////////////////////////////////////////////
 public ArrayList<Proforma> TrierPrix(int idArticle) {
     Proforma proforma = new Proforma();
@@ -163,4 +200,5 @@ public ArrayList<Proforma> TrierPrix(int idArticle) {
 }
 
 //////////////////////////////////////////////////////////////////////
+
 }

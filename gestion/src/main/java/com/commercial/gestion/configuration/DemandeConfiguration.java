@@ -1,6 +1,6 @@
 package com.commercial.gestion.configuration;
 
-public class DemandeBesoinAchatConfiguration {
+public class DemandeConfiguration {
     public static final int EN_COURS = 0;
     public static final int VALIDER = 10;
     public static final int REFUSER = 20;

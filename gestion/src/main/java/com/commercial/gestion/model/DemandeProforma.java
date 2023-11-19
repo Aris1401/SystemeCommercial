@@ -6,8 +6,14 @@
 package com.commercial.gestion.model;
 
 import com.commercial.gestion.BDDIante.BDD;
+import com.commercial.gestion.aris.bdd.annotations.PrimaryKey;
+import com.commercial.gestion.aris.bdd.generic.GenericDAO;
+import com.commercial.gestion.configuration.DemandeConfiguration;
+import com.commercial.gestion.dbAccess.ConnectTo;
 
+import java.sql.Connection;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 /**
  *
@@ -15,6 +21,7 @@ import java.sql.Timestamp;
  */
 public class DemandeProforma extends BDD
 {
+    @PrimaryKey
      int idDemandeProforma;
      int idArticleBesoinAchat;
      Timestamp dateDemande;
@@ -78,4 +85,65 @@ public class DemandeProforma extends BDD
 
  }
     /////////////////////////////////////////////////////////
+    public Fournisseur getFournisseur() {
+        return Fournisseur.getFournisseurById(idFournisseur);
+    }
+    public ArticleBesoinAchat getArticleBesoinAchat() {
+        return ArticleBesoinAchat.getArticleBesoinAchatById(idArticleBesoinAchat);
+    }
+
+    public static DemandeProforma obtenirDemande(int idDemandeProforma) {
+        try {
+            Connection c = ConnectTo.postgreS();
+
+            GenericDAO<DemandeProforma> demandeProformaGenericDAO = new GenericDAO<>(DemandeProforma.class);
+            demandeProformaGenericDAO.addToSelection("idDemandeProforma", idDemandeProforma, "");
+
+            ArrayList<DemandeProforma> demandeProformas = demandeProformaGenericDAO.getFromDatabase(c);
+
+            c.close();
+
+            return demandeProformas.isEmpty() ? null : demandeProformas.get(0);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static DemandeProforma demandeFournisseurArticleBesoinAchat(int idFournisseur, int idArticleBesoinAchat) {
+        try {
+            Connection c = ConnectTo.postgreS();
+
+            GenericDAO<DemandeProforma> demandeProformaGenericDAO = new GenericDAO<>(DemandeProforma.class);
+            demandeProformaGenericDAO.addToSelection("idFournisseur", idFournisseur, "");
+            demandeProformaGenericDAO.addToSelection("idArticleBesoinAchat", idArticleBesoinAchat, "and");
+
+            ArrayList<DemandeProforma> demandeProformas = demandeProformaGenericDAO.getFromDatabase(c);
+
+            c.close();
+
+            return demandeProformas.isEmpty() ? null : demandeProformas.get(0);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void validerDemandeProforma() {
+        DemandeProforma.validerDemandeProforma(idDemandeProforma);
+    }
+
+    public static void validerDemandeProforma(int idDemandeProforma) {
+        GenericDAO<DemandeProforma> demandeProformaGenericDAO = new GenericDAO<>(DemandeProforma.class);
+
+        try {
+            Connection c = ConnectTo.postgreS();
+
+            demandeProformaGenericDAO.addToSetUpdate("statusDemande", DemandeConfiguration.VALIDER);
+            demandeProformaGenericDAO.addToSelection("idDemandeProforma", idDemandeProforma, "");
+
+            demandeProformaGenericDAO.updateInDatabase(c);
+
+            c.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

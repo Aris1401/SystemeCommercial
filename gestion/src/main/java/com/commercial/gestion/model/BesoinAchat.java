@@ -7,7 +7,7 @@ package com.commercial.gestion.model;
 
 import com.commercial.gestion.BDDIante.BDD;
 import com.commercial.gestion.aris.bdd.generic.GenericDAO;
-import com.commercial.gestion.configuration.DemandeBesoinAchatConfiguration;
+import com.commercial.gestion.configuration.DemandeConfiguration;
 import com.commercial.gestion.dbAccess.ConnectTo;
 import com.commercial.gestion.response.ArticleQuantiteResponse;
 import org.springframework.stereotype.Component;
@@ -95,7 +95,7 @@ public class BesoinAchat extends BDD {
 
     ////////////////////////////////////////////////////////////////////////////
     public static ArrayList<BesoinAchat> allOpenBesoinAchat() {
-        String condition = "where statusBesoin = " + String.valueOf(DemandeBesoinAchatConfiguration.EN_COURS);
+        String condition = "where statusBesoin = " + String.valueOf(DemandeConfiguration.EN_COURS);
         BesoinAchat besoinAchat = new BesoinAchat();
         ArrayList<String[]> allBesoinAchatBDD = besoinAchat.select(condition);
         ArrayList<BesoinAchat> allBesoinAchat = new ArrayList<BesoinAchat>();
@@ -114,7 +114,7 @@ public class BesoinAchat extends BDD {
 
     ////////////////////////////////////////////////////////////////////////////
     public ArrayList<BesoinAchat> allClosedBesoinAchat() {
-        String condition = "where statusBesoin = " + String.valueOf(DemandeBesoinAchatConfiguration.VALIDER) + " or statusBesoin = " + String.valueOf(DemandeBesoinAchatConfiguration.REFUSER);
+        String condition = "where statusBesoin = " + String.valueOf(DemandeConfiguration.VALIDER) + " or statusBesoin = " + String.valueOf(DemandeConfiguration.REFUSER);
         BesoinAchat besoinAchat = new BesoinAchat();
         ArrayList<String[]> allBesoinAchatBDD = besoinAchat.select(condition);
         ArrayList<BesoinAchat> allBesoinAchat = new ArrayList<BesoinAchat>();
@@ -192,6 +192,6 @@ public class BesoinAchat extends BDD {
     }
 
     public String getStatusString() {
-        return DemandeBesoinAchatConfiguration.getStatusString(statusBesoin);
+        return DemandeConfiguration.getStatusString(statusBesoin);
     }
 }
