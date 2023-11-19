@@ -134,6 +134,7 @@ public boolean insertProforma(String idFournisseur,String dateObtention,String p
     insert=true;
     return insert;
 }
+
 ////////////////////////////////////////////////////////////////////////////
     public static ArrayList<Proforma> obtenirProformaBesoinArticle(int idArticleBesoinAchat){
         ArrayList<Proforma> proformas = new ArrayList<>();
@@ -162,4 +163,42 @@ public boolean insertProforma(String idFournisseur,String dateObtention,String p
 
         return proformas;
     }
+
+//////////////////////////////////////////////////////////////////////
+public ArrayList<Proforma> TrierPrix(int idArticle) {
+    Proforma proforma = new Proforma();
+    String condition = "idArticle =" + idArticle;
+    ArrayList<String[]> allProformaBDD = proforma.select(condition);
+    ArrayList<Proforma> allP = new ArrayList<Proforma>();
+
+    for (int i = 0; i < allProformaBDD.size(); i++) {
+        Proforma p = new Proforma();
+        p.setIdProforma(Integer.parseInt(allProformaBDD.get(i)[0]));
+        p.setIdFournisseur(Integer.parseInt(allProformaBDD.get(i)[1]));
+        p.setDateObtention(Timestamp.valueOf(allProformaBDD.get(i)[2]));
+        p.setPrixUnitaire(Double.parseDouble(allProformaBDD.get(i)[3]));
+        p.setQuantite(Double.parseDouble(allProformaBDD.get(i)[4]));
+        p.setIdArticle(Integer.parseInt(allProformaBDD.get(i)[5]));
+        allP.add(p);
+    }
+    ArrayList<Proforma> vrai = new ArrayList<>();
+
+    for (int i = allP.size(); i > 0; i--) {
+        Proforma maxP = allP.get(0);
+        for (int j = 0; j < allP.size(); j++)
+        {
+            Proforma p = allP.get(j);
+            if (p.getPrixUnitaire() > maxP.getPrixUnitaire())
+            {
+                maxP = p;
+            }
+        }
+        vrai.add(maxP);
+        allP.remove(maxP);
+    }
+    return vrai;
+}
+
+//////////////////////////////////////////////////////////////////////
+
 }

@@ -7,6 +7,8 @@ package com.commercial.gestion.model;
 
 import com.commercial.gestion.BDDIante.BDD;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
@@ -24,7 +26,8 @@ public class BonDeCommande extends BDD
     Timestamp dateLivraison;
     int idModeDePaiement;
     String conditionDePaiement;
-    double montantTotal;  
+    double montantTotal;
+    int statusBonDeCommande;
 
     public int getIdBonDeCommande() {
         return idBonDeCommande;
@@ -94,12 +97,22 @@ public class BonDeCommande extends BDD
         return montantTotal;
     }
 
-    public void setMontantTotal(double montantTotal) {this.montantTotal = montantTotal;}
+    public void setMontantTotal(double montantTotal) {
+        this.montantTotal = montantTotal;
+    }
 
- ////////////////////////////////////////////////////////////////////
+    public int getStatusBonDeCommande() {
+        return statusBonDeCommande;
+    }
+
+    public void setStatusBonDeCommande(int statusBonDeCommande) {
+        this.statusBonDeCommande = statusBonDeCommande;
+    }
+
+    ////////////////////////////////////////////////////////////////////
  public boolean insertBonDeCommande(String titre,String dateDeCreation,String idFournisseur,
                                     String idBesoinAchat,String dateLivraison,String idModeDePaiement,
-                                    String conditionDePaiement,String montantTotal)
+                                    String conditionDePaiement,String montantTotal,String status)
  {
      boolean insert=false;
     BonDeCommande bonDeCommande=new BonDeCommande();
@@ -112,6 +125,7 @@ public class BonDeCommande extends BDD
      bonDeCommande.setConditionDePaiement(conditionDePaiement);
      bonDeCommande.setMontantTotal(Double.parseDouble(montantTotal));
      bonDeCommande.dontSave("idBonDeCommande");
+     bonDeCommande.setStatusBonDeCommande(Integer.parseInt(status));
      bonDeCommande.save();
      insert=true;
      return insert;
@@ -133,6 +147,7 @@ public ArrayList<BonDeCommande> allBonDeCommande()
         bonDeCommande.setIdModeDePaiement(Integer.parseInt(allBonDeCommandeBDD.get(i)[5]));
         bonDeCommande.setConditionDePaiement(allBonDeCommandeBDD.get(i)[6]);
         bonDeCommande.setMontantTotal(Double.parseDouble(allBonDeCommandeBDD.get(i)[7]));
+        bonDeCommande.setStatusBonDeCommande(Integer.parseInt(allBonDeCommandeBDD.get(i)[8]));
         allBonDeCommande.add(bonDeCommande);
     }
     return allBonDeCommande;
@@ -155,9 +170,73 @@ public ArrayList<BonDeCommande> allBonDeCommande()
             bonDeCommande.setIdModeDePaiement(Integer.parseInt(allBonDeCommandeBDD.get(i)[5]));
             bonDeCommande.setConditionDePaiement(allBonDeCommandeBDD.get(i)[6]);
             bonDeCommande.setMontantTotal(Double.parseDouble(allBonDeCommandeBDD.get(i)[7]));
+            bonDeCommande.setStatusBonDeCommande(Integer.parseInt(allBonDeCommandeBDD.get(i)[8]));
             allBonDeCommande.add(bonDeCommande);
         }
         return allBonDeCommande;
     }
 ////////////////////////////////////////////////////////////////////
+public ArrayList<BonDeCommande> getBonDeCommandeValide()
+{
+    BonDeCommande b=new BonDeCommande();
+    String condition="statusBonDeCommande  = 1";
+    ArrayList<String[]> allBonDeCommandeBDD=b.select(condition);
+    ArrayList<BonDeCommande> allBonDeCommande=new ArrayList<BonDeCommande>();
+    for(int i=0;i<allBonDeCommandeBDD.size();i++)
+    {
+        BonDeCommande bonDeCommande=new BonDeCommande();
+        bonDeCommande.setIdBonDeCommande(Integer.parseInt(allBonDeCommandeBDD.get(i)[0]));
+        bonDeCommande.setDateCreation(Timestamp.valueOf(allBonDeCommandeBDD.get(i)[1]));
+        bonDeCommande.setIdFournisseur(Integer.parseInt(allBonDeCommandeBDD.get(i)[2]));
+        bonDeCommande.setIdBesoinAchat(Integer.parseInt(allBonDeCommandeBDD.get(i)[3]));
+        bonDeCommande.setDateLivraison(Timestamp.valueOf(allBonDeCommandeBDD.get(i)[4]));
+        bonDeCommande.setIdModeDePaiement(Integer.parseInt(allBonDeCommandeBDD.get(i)[5]));
+        bonDeCommande.setConditionDePaiement(allBonDeCommandeBDD.get(i)[6]);
+        bonDeCommande.setMontantTotal(Double.parseDouble(allBonDeCommandeBDD.get(i)[7]));
+        bonDeCommande.setStatusBonDeCommande(Integer.parseInt(allBonDeCommandeBDD.get(i)[8]));
+        allBonDeCommande.add(bonDeCommande);
+    }
+    return allBonDeCommande;
+}
+////////////////////////////////////////////////////////////////////
+public ArrayList<BonDeCommande> getBonDeCommandeNonValide()
+{
+    BonDeCommande b=new BonDeCommande();
+    String condition="statusBonDeCommande  = 0";
+    ArrayList<String[]> allBonDeCommandeBDD=b.select(condition);
+    ArrayList<BonDeCommande> allBonDeCommande=new ArrayList<BonDeCommande>();
+    for(int i=0;i<allBonDeCommandeBDD.size();i++)
+    {
+        BonDeCommande bonDeCommande=new BonDeCommande();
+        bonDeCommande.setIdBonDeCommande(Integer.parseInt(allBonDeCommandeBDD.get(i)[0]));
+        bonDeCommande.setDateCreation(Timestamp.valueOf(allBonDeCommandeBDD.get(i)[1]));
+        bonDeCommande.setIdFournisseur(Integer.parseInt(allBonDeCommandeBDD.get(i)[2]));
+        bonDeCommande.setIdBesoinAchat(Integer.parseInt(allBonDeCommandeBDD.get(i)[3]));
+        bonDeCommande.setDateLivraison(Timestamp.valueOf(allBonDeCommandeBDD.get(i)[4]));
+        bonDeCommande.setIdModeDePaiement(Integer.parseInt(allBonDeCommandeBDD.get(i)[5]));
+        bonDeCommande.setConditionDePaiement(allBonDeCommandeBDD.get(i)[6]);
+        bonDeCommande.setMontantTotal(Double.parseDouble(allBonDeCommandeBDD.get(i)[7]));
+        bonDeCommande.setStatusBonDeCommande(Integer.parseInt(allBonDeCommandeBDD.get(i)[8]));
+        allBonDeCommande.add(bonDeCommande);
+    }
+    return allBonDeCommande;
+}
+////////////////////////////////////////////////////////////////////
+public void validerBonDeCommande5(int idBonDeCommande,boolean ok) throws SQLException {
+   if (ok=true)
+   {
+      BonDeCommande b=new BonDeCommande();
+      b.update5(idBonDeCommande);
+   }
+}
+
+//////////////////////////////////////////////////////////////////////
+public void validerBonDeCommande10(int idBonDeCommande,boolean ok,boolean okok) throws SQLException {
+    if (ok==true && okok==true)
+    {
+        BonDeCommande b=new BonDeCommande();
+        b.update10(idBonDeCommande);
+    }
+}
+//////////////////////////////////////////////////////////////////////
 }

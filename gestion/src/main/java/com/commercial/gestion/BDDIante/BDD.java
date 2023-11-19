@@ -319,6 +319,20 @@ public class BDD {
             ERROR("BDD.close",ex);
         }
     }
+    public void update5(int idBonDeCommande) throws SQLException {
+        String updateQuery = "UPDATE BonDeCommande SET statusBonDeCommande = 5 WHERE idBonDeCommande = ?";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(updateQuery)) {
+            preparedStatement.setInt(1, idBonDeCommande);
+            preparedStatement.executeUpdate();
+        }
+    }
+    public void update10(int idBonDeCommande) throws SQLException {
+        String updateQuery = "UPDATE BonDeCommande SET statusBonDeCommande = 10 WHERE idBonDeCommande = ?";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(updateQuery)) {
+            preparedStatement.setInt(1, idBonDeCommande);
+            preparedStatement.executeUpdate();
+        }
+    }
     
     public void showInTerminal(){
         String[][] field = this.valueOfField();

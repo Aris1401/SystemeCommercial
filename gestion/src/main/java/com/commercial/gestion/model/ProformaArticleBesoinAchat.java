@@ -1,6 +1,7 @@
 package com.commercial.gestion.model;
 
 import com.commercial.gestion.BDDIante.BDD;
+
 import com.commercial.gestion.aris.bdd.annotations.ExcludeFromInsertion;
 import com.commercial.gestion.aris.bdd.generic.GenericDAO;
 import com.commercial.gestion.dbAccess.ConnectTo;
@@ -22,6 +23,7 @@ public class ProformaArticleBesoinAchat extends BDD {
      int idProforma;
 
      int idArticleBesoinAchat;
+
 
     Timestamp dateLiaison;
 
@@ -70,5 +72,6 @@ public class ProformaArticleBesoinAchat extends BDD {
     public void setDateLiaison(Timestamp dateLiaison) {
         this.dateLiaison = dateLiaison;
     }
+
 }
 
