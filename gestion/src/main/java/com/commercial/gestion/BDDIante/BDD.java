@@ -4,12 +4,11 @@
 */
 package com.commercial.gestion.BDDIante;
 
+import com.commercial.gestion.BDDIante.annotations.NotInTable;
+
 import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.lang.reflect.Modifier;
+import java.sql.*;
 import java.util.ArrayList;
 
 /**
@@ -23,7 +22,7 @@ public class BDD {
     String table;
     
     public static String getBdaUrl(){
-        return "jdbc:postgresql://localhost:5432/gestion_2";
+        return "jdbc:postgresql://localhost:5432/systemecommercial";
     }
     
     public static String getBdaUser(){
@@ -47,9 +46,15 @@ public class BDD {
     
     private String[] getField(){
         Field[] field = this.getClass().getDeclaredFields();
-        String [] fieldString = new String[field.length];
+        int realFieldLength = 0;
+        for (Field value : field) {
+            if (value.isAnnotationPresent(NotInTable.class)) continue;
+            else realFieldLength++;
+        }
+        String [] fieldString = new String[realFieldLength];
         for(int i = 0;i<field.length;i++){
-            fieldString[i] = field[i].getName();
+            if (field[i].isAnnotationPresent(NotInTable.class)) continue;
+            else fieldString[i] = field[i].getName();
         }
         return fieldString;
     }
@@ -97,8 +102,46 @@ public class BDD {
         string1.setCharAt(valreq.length()-1, ')');
         
         requete += string +" values "+ string1;
-        this.confirme(requete );
+        try {
+            this.confirme(requete);
+        } catch (Exception e) {
+
+        }
           System.out.println(requete +"ppppppppppppppp");
+    }
+
+    public int saveId(){
+        if(notSave == null){
+            notSave = new ArrayList<String>();
+        }
+        String[][] data = this.valueOfField();
+        String requete = "insert into "+this.getClass().getSimpleName()+" ";
+        String colreq = "(";
+        String valreq = "(";
+        for (String[] data1 : data) {
+            boolean indicateur = true;
+            for(int i=0;i<this.notSave.size();i++){
+                if(notSave.get(i)==data1[0]){
+                    indicateur = false;
+                }
+            }
+            if(indicateur){
+                colreq += ""+data1[0] + ",";
+                valreq += "'"+data1[1] + "',";
+            }
+        }
+        StringBuilder string = new StringBuilder(colreq);
+        string.setCharAt(colreq.length()-1, ')');
+        StringBuilder string1 = new StringBuilder(valreq);
+        string1.setCharAt(valreq.length()-1, ')');
+
+        requete += string +" values "+ string1;
+        try {
+            return this.confirmeId(requete);
+        } catch (Exception e) {
+
+        }
+        return -1;
     }
     public void delete(){
         String requete = "delete from "+this.getClass().getSimpleName()+" ";
@@ -156,7 +199,7 @@ public class BDD {
         return data;
     }
     public ArrayList<String[]> select(String condition){
-        String requete = "select * from "+this.getClass().getSimpleName()+condition;
+        String requete = "select * from "+this.getClass().getSimpleName()+" " + condition;
         ArrayList<String[]> data = new ArrayList();
         try{
             String[] field = getField();
@@ -240,6 +283,23 @@ public class BDD {
         }
         close();
         return reponse;
+    }
+
+    public int confirmeId(String requete) {
+        int id = -1;
+        open();
+        try {
+            stmt = conn.prepareStatement(requete, Statement.RETURN_GENERATED_KEYS);
+            stmt.executeUpdate();
+            ResultSet rs = stmt.getGeneratedKeys();
+            if(rs.next()){
+                id = rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            ERROR("BDD.confirme",ex);
+        }
+        close();
+        return id;
     }
     
     public ResultSet response(String requete) throws SQLException{

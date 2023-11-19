@@ -6,21 +6,22 @@
 package com.commercial.gestion.model;
 
 import com.commercial.gestion.BDDIante.BDD;
+import com.commercial.gestion.aris.bdd.generic.GenericDAO;
+import com.commercial.gestion.dbAccess.ConnectTo;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 
 /**
- *
  * @author BEST
  */
-public class ArticleBesoinAchat extends BDD
-{
-   int idArticleBesoinAchat;
-   int idArticle;
-   int idBesoinAchat;
-   double quantite;
-   int idUnite;
-   String descriptionArticleBesoin;
+public class ArticleBesoinAchat extends BDD {
+    int idArticleBesoinAchat;
+    int idArticle;
+    int idBesoinAchat;
+    double quantite;
+    int idUnite;
+    String descriptionArticleBesoin;
 
     public int getIdArticleBesoinAchat() {
         return idArticleBesoinAchat;
@@ -69,20 +70,63 @@ public class ArticleBesoinAchat extends BDD
     public void setDescriptionArticleBesoin(String descriptionArticleBesoin) {
         this.descriptionArticleBesoin = descriptionArticleBesoin;
     }
-////////////////////////////////////////////////////////////
-public static ArticleBesoinAchat getArticleBesoinAchatById(int idArticleBesoinAchat) {
-    ArticleBesoinAchat a = new ArticleBesoinAchat();
-    String condition = "";
-    ArrayList<String[]> allArticleBDD = a.select();
-    for (int i = 0; i < allArticleBDD.size(); i++) {
 
-        a.setIdArticleBesoinAchat(Integer.parseInt(allArticleBDD.get(i)[0]));
-        a.setIdArticle(Integer.parseInt(allArticleBDD.get(i)[1]));
-        a.setIdBesoinAchat(Integer.parseInt(allArticleBDD.get(i)[2]));
-        a.setQuantite(Double.parseDouble(allArticleBDD.get(i)[3]));
-        a.setIdUnite(Integer.parseInt(allArticleBDD.get(i)[4]));
-        a.setDescriptionArticleBesoin(allArticleBDD.get(i)[5]);
+    ////////////////////////////////////////////////////////////
+    public static ArticleBesoinAchat getArticleBesoinAchatById(int idArticleBesoinAchat) {
+        ArticleBesoinAchat a = new ArticleBesoinAchat();
+        String condition = "";
+        ArrayList<String[]> allArticleBDD = a.select();
+        for (int i = 0; i < allArticleBDD.size(); i++) {
+
+            a.setIdArticleBesoinAchat(Integer.parseInt(allArticleBDD.get(i)[0]));
+            a.setIdArticle(Integer.parseInt(allArticleBDD.get(i)[1]));
+            a.setIdBesoinAchat(Integer.parseInt(allArticleBDD.get(i)[2]));
+            a.setQuantite(Double.parseDouble(allArticleBDD.get(i)[3]));
+            a.setIdUnite(Integer.parseInt(allArticleBDD.get(i)[4]));
+            a.setDescriptionArticleBesoin(allArticleBDD.get(i)[5]);
+        }
+        return a;
     }
-    return a;
-}
+
+    public static ArrayList<ArticleBesoinAchat> getArticleBesoinAchatByBesoinAchat(int idBesoinAchat) {
+        ArticleBesoinAchat a = new ArticleBesoinAchat();
+        String condition = "where idBesoinAchat = " + idBesoinAchat;
+
+        ArrayList<ArticleBesoinAchat> articleBesoinAchats = new ArrayList<>();
+
+        ArrayList<String[]> allArticleBDD = a.select(condition);
+        for (int i = 0; i < allArticleBDD.size(); i++) {
+            ArticleBesoinAchat article = new ArticleBesoinAchat();
+            article.setIdArticleBesoinAchat(Integer.parseInt(allArticleBDD.get(i)[0]));
+            article.setIdArticle(Integer.parseInt(allArticleBDD.get(i)[1]));
+            article.setIdBesoinAchat(Integer.parseInt(allArticleBDD.get(i)[2]));
+            article.setQuantite(Double.parseDouble(allArticleBDD.get(i)[3]));
+            article.setIdUnite(Integer.parseInt(allArticleBDD.get(i)[4]));
+            article.setDescriptionArticleBesoin(allArticleBDD.get(i)[5]);
+
+            articleBesoinAchats.add(article);
+        }
+        return articleBesoinAchats;
+    }
+
+    public Article getArticle() {
+        return Article.getArticleById(idArticle);
+    }
+
+    public Unite getUnite() {
+        GenericDAO<Unite> uniteGenericDAO = new GenericDAO<>(Unite.class);
+
+        try {
+            Connection connection = ConnectTo.postgreS();
+
+            uniteGenericDAO.addToSelection("idUnite", idUnite, "");
+            ArrayList<Unite> unites = uniteGenericDAO.getFromDatabase(connection);
+
+            connection.close();
+
+            return unites.isEmpty() ? null : unites.get(0);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

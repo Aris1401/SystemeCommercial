@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const API = axios.create({
-  baseURL: 'http://localhost:8080/Back',
+  baseURL: 'http://localhost:8080',
   responseType: 'json',
   withCredentials: true
 })

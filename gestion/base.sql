@@ -1,5 +1,26 @@
 create database systemecommercial;
 
+DROP TABLE IF EXISTS DemandeAjoutArticle CASCADE;
+DROP TABLE IF EXISTS DemandeProforma CASCADE;
+DROP TABLE IF EXISTS ProformaBesoinAchat CASCADE;
+DROP TABLE IF EXISTS ValidationBonDeCommande CASCADE;
+DROP TABLE IF EXISTS ArticleBonDeCommande CASCADE;
+DROP TABLE IF EXISTS BonDeCommande CASCADE;
+DROP TABLE IF EXISTS ModeDePaiement CASCADE;
+DROP TABLE IF EXISTS Proforma CASCADE;
+DROP TABLE IF EXISTS Fournisseur CASCADE;
+DROP TABLE IF EXISTS TypeProduit CASCADE;
+DROP TABLE IF EXISTS ValidationBesoinAchat CASCADE;
+DROP TABLE IF EXISTS ArticleBesoinAchat CASCADE;
+DROP TABLE IF EXISTS BesoinAchat CASCADE;
+DROP TABLE IF EXISTS TypeUtilisateur CASCADE;
+DROP TABLE IF EXISTS Utilisateur CASCADE;
+DROP TABLE IF EXISTS ProfilUtilisateur CASCADE;
+DROP TABLE IF EXISTS Profil CASCADE;
+DROP TABLE IF EXISTS Service CASCADE;
+DROP TABLE IF EXISTS Article CASCADE;
+DROP TABLE IF EXISTS Unite CASCADE;
+
 create table TypeUtilisateur(
     idTypeUtilisateur serial,
     nom VARCHAR(255),
@@ -47,9 +68,12 @@ create table BesoinAchat(
     dateBesoin TIMESTAMP,
     dateCloture TIMESTAMP,
     statusBesoin int,
+    description TEXT,
     PRIMARY KEY(idBesoinAchat),
     FOREIGN KEY(idService) REFERENCES Service (idService)
 );
+
+-- ALTER TABLE BesoinAchat ADD COLUMN description TEXT
 
 create table Article(
     idArticle serial,
@@ -85,7 +109,7 @@ create table ValidationBesoinAchat(
     statusValidation int,
     PRIMARY KEY(idValidationBesoinAchat),
     FOREIGN KEY(idBesoinAchat) REFERENCES BesoinAchat (idBesoinAchat),
-    FOREIGN KEY(Utilisateur) REFERENCES Utilisateur(Utilisateur)
+    FOREIGN KEY(idUtilisateur) REFERENCES Utilisateur(idUtilisateur)
 );
 
 create table TypeProduit(
@@ -117,15 +141,15 @@ create table Proforma(
     quantite DECIMAL,
     idArticle int,
     PRIMARY KEY(idProforma),
-    FOREIGN KEY(idFournisseur) REFERENCES  Fournisseur(idTypeProduit),
+    FOREIGN KEY(idFournisseur) REFERENCES  Fournisseur(idFournisseur),
     FOREIGN KEY(idArticle) REFERENCES Article (idArticle)
 );
 
 create table ModeDePaiement(
     idModeDePaiement serial,
     nom VARCHAR(255),
-    PRIMARYKEY(idModeDePaiement)
-)
+    PRIMARY KEY(idModeDePaiement)
+);
 
 create table BonDeCommande(
     idBonDeCommande serial,
@@ -166,13 +190,13 @@ create table ValidationBonDeCommande(
    FOREIGN KEY(idUtilisateur) REFERENCES Utilisateur(idUtilisateur)
 );
 
-create table ProformaBesoinAchat(
+create table ProformaArticleBesoinAchat(
     idProformaBesoinAchat serial,
     idProforma int,
-    idBesoinAchat int,
+    idArticleBesoinAchat int,
     dateLivraison TIMESTAMP,
     PRIMARY KEY(idProformaBesoinAchat),
-    FOREIGN KEY(idBesoinAchat) REFERENCES BesoinAchat(idBesoinAchat)
+    FOREIGN KEY(idArticleBesoinAchat) REFERENCES ArticleBesoinAchat(idArticleBesoinAchat)
 );
 
 create table DemandeProforma(
