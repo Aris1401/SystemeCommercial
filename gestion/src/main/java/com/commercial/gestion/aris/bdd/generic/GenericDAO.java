@@ -2,12 +2,7 @@ package com.commercial.gestion.aris.bdd.generic;
 
 import java.io.Serializable;
 import java.lang.reflect.*;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -412,7 +407,7 @@ public class GenericDAO<T> implements Serializable {
 	public int saveInDatabse(Connection c) throws SQLException {
 		if (c == null) return -1;
 		
-		Statement stat = c.createStatement();
+//		Statement stat = c.createStatement();
 		
 		StringBuilder requete = new StringBuilder("INSERT INTO " + getCurrentClassName() + "(");
 		
@@ -488,9 +483,15 @@ public class GenericDAO<T> implements Serializable {
             }
         }
 
+		PreparedStatement stat = c.prepareStatement(requete.toString(), Statement.RETURN_GENERATED_KEYS);
+
 		int generatedKey = -1;
 		try {
-			generatedKey = stat.executeUpdate(requete.toString(), Statement.RETURN_GENERATED_KEYS);
+			stat.executeUpdate();
+			ResultSet rs = stat.getGeneratedKeys();
+			if(rs.next()){
+				generatedKey = rs.getInt(1);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -12,13 +12,13 @@ public class GenericBonDeCommande extends GenericDAO<GenericBonDeCommande> {
     @PrimaryKey
     @ExcludeFromInsertion
     int idBonDeCommande;
-    String titre;
-    Timestamp dateCreation;
+    String titre = null;
+    Timestamp dateCreation  = null;
     int idFournisseur;
     int idBesoinAchat;
-    Timestamp dateLivraison;
-    int idModeDePaiement;
-    String conditionDePaiement;
+    Timestamp dateLivraison = null;
+    String idModeDePaiement = null;
+    String conditionDePaiement = null;
     double montantTotal;
     int statusBonDeCommande;
     public GenericBonDeCommande() {
@@ -73,11 +73,11 @@ public class GenericBonDeCommande extends GenericDAO<GenericBonDeCommande> {
         this.dateLivraison = dateLivraison;
     }
 
-    public int getIdModeDePaiement() {
+    public String getIdModeDePaiement() {
         return idModeDePaiement;
     }
 
-    public void setIdModeDePaiement(int idModeDePaiement) {
+    public void setIdModeDePaiement(String idModeDePaiement) {
         this.idModeDePaiement = idModeDePaiement;
     }
 

@@ -245,6 +245,8 @@ public class BesoinAchat extends BDD {
     }
 
     public ArrayList<BonDeCommande> genererBonDeCommandes() throws Exception {
+//        if (statusBesoin != DemandeConfiguration.VALIDER) return null;
+
         // Obtenir tout les articles correspondants
         ArrayList<ArticleBesoinAchat> articleBesoinAchats = getArticlesBesoinAchat();
 
@@ -278,7 +280,7 @@ public class BesoinAchat extends BDD {
         // Creation des bons de commande
         ArrayList<BonDeCommande> bonDeCommandes = new ArrayList<>();
         for (Map.Entry<Integer, ArrayList<ArticleBesoinAchat>> entry : articlesGroupees.entrySet()) {
-            bonDeCommandes.add(BonDeCommande.createBonDeCommande(entry.getKey(), entry.getValue()));
+            bonDeCommandes.add(BonDeCommande.createBonDeCommande(entry.getKey(), idBesoinAchat, entry.getValue()));
         }
 
         return bonDeCommandes;

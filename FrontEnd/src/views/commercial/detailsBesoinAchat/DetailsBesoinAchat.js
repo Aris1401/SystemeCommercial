@@ -1,6 +1,6 @@
 import { cilArrowRight } from '@coreui/icons';
 import CIcon from '@coreui/icons-react';
-import { CButton, CCard, CCardBody, CCardHeader, CCardSubtitle, CCardTitle, CCol, CNav, CNavLink, CRow, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react';
+import { CButton, CCard, CCardBody, CCardHeader, CCardSubtitle, CCardTitle, CCol, CNav, CNavLink, CRow, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow, CToast, CToastHeader } from '@coreui/react';
 import React, { useEffect, useRef, useState } from 'react'
 import { NavLink, useParams } from 'react-router-dom'
 import { makeRequest } from 'src/Api';
@@ -10,6 +10,21 @@ export const getDetailsBesoinAchat = (idBesoinAchat) => {
     return new Promise((resolve, reject) => {
         makeRequest({
             url: `besoinsachat/${idBesoinAchat}`,
+            requestType: 'GET',
+            successCallback: (data) => {
+                resolve(data)
+            },
+            failureCallback: (error) => {
+                reject(error)
+            }
+        })
+    })
+}
+
+export const genererBonDeCommande = (idBesoinAchat) => {
+    return new Promise((resolve, reject) => {
+        makeRequest({
+            url: `/besoinsachat/${idBesoinAchat}/bondecommande/generer`,
             requestType: 'GET',
             successCallback: (data) => {
                 resolve(data)
@@ -38,6 +53,20 @@ const DetailsBesoinAchat = () => {
 
     // Demande achat modal
     const demandeAchatModalRef = useRef()
+
+    // Generation de bon de commande
+    const [ errorMessage, setErrorMessage ] = useState()
+    const [ displayError, setDisplayError ] = useState(false)
+    const handleGenerationBonDeCommande = (e) => {
+        if (besoinAchat) {
+            genererBonDeCommande(besoinAchat.idBesoinAchat).then((data) => {
+                if (data.errorMessage) {
+                    setErrorMessage(data.errorMessage)
+                    setDisplayError(true)
+                }
+            })
+        }
+    } 
 
     return (
         <CCard className='p-2'>
@@ -107,12 +136,27 @@ const DetailsBesoinAchat = () => {
                     <CCol className='d-flex flex-column justify-content-end align-items-end gap-2'>
                         <p className='text-medium-emphasis fw-bold mb-0' style={{ fontSize: '.9rem' }}>Estimation montant total: { besoinAchat && besoinAchat.estimationMontantTotal } Ar</p>
                         <CButton style={{ fontSize: '.9rem' }} disabled>Valider besoin</CButton>
-                        <CButton style={{ fontSize: '.9rem' }} className='btn-success text-white' disabled>Generer bons de commandes</CButton>
+                        <CButton style={{ fontSize: '.9rem' }} className='btn-success text-white' onClick={handleGenerationBonDeCommande}>Generer bons de commandes</CButton>
                     </CCol>
                 </CRow>
             </CCardBody>
 
             <DemandeProformaBesoin ref={demandeAchatModalRef} />
+
+            {/* Error message alert */}
+            <CToast visible={displayError} animation={true}  onClose={(index) => {
+                setDisplayError(false)
+            }} color='danger' style={{ position: 'absolute', right: '2%', top: '2%' }}>
+                <CToastHeader closeButton>
+                    <div className="fw-bold me-auto">Generation bon de commande</div>
+                </CToastHeader>
+
+                <CTableBody>
+                    <p className='p-2 m-0'>
+                        { errorMessage }
+                    </p>
+                </CTableBody>
+            </CToast>
         </CCard>
     )
 }
