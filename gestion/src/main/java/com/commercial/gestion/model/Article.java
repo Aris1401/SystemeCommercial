@@ -44,7 +44,7 @@ public class Article extends BDD
     }
 
 /////////////////////////////////////////////////////////////
-public ArrayList<Article> allArticle()
+public static ArrayList<Article> allArticle()
 {
     Article article=new Article();
     ArrayList<String[]> allArticleBDD=article.select();
@@ -61,18 +61,15 @@ public ArrayList<Article> allArticle()
     return allArticle;
 }
 /////////////////////////////////////////////////////////////
-public Article getArticleById(int idArticle)
+public static Article getArticleById(int idArticle)
 {
     Article a=new Article();
-    String condition="idArticle= "+idArticle;
-    ArrayList<String[]> allArticleBDD=a.select();
-    for(int i=0;i<allArticleBDD.size();i++)
-    {
-
-        a.setIdArticle(Integer.parseInt(allArticleBDD.get(i)[0]));
-        a.setNom(allArticleBDD.get(i)[1]);
-        a.setDescriptionArticle(allArticleBDD.get(i)[2]);
-
+    String condition="where idArticle= "+idArticle;
+    ArrayList<String[]> allArticleBDD=a.select(condition);
+    for (String[] strings : allArticleBDD) {
+        a.setIdArticle(Integer.parseInt(strings[0]));
+        a.setNom(strings[1]);
+        a.setDescriptionArticle(strings[2]);
     }
     return a;
 }
