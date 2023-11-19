@@ -5,12 +5,20 @@
  */
 package com.commercial.gestion.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
 /**
  *
  * @author BEST
  */
+@Entity
 public class Unite 
 {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     int idUnite;
     String nom;
 
