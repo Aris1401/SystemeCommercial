@@ -194,7 +194,7 @@ create table ProformaArticleBesoinAchat(
     idProformaBesoinAchat serial,
     idProforma int,
     idArticleBesoinAchat int,
-    dateLivraison TIMESTAMP,
+    dateLiaison TIMESTAMP,
     PRIMARY KEY(idProformaBesoinAchat),
     FOREIGN KEY(idArticleBesoinAchat) REFERENCES ArticleBesoinAchat(idArticleBesoinAchat)
 );

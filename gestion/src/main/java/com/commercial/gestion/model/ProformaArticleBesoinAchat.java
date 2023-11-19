@@ -1,23 +1,29 @@
 package com.commercial.gestion.model;
 
-import jakarta.persistence.*;
+import com.commercial.gestion.BDDIante.BDD;
+import com.commercial.gestion.aris.bdd.annotations.ExcludeFromInsertion;
+import com.commercial.gestion.aris.bdd.generic.GenericDAO;
+import com.commercial.gestion.dbAccess.ConnectTo;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+import java.sql.Connection;
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Entity
-@Table(name = "ProformaArticleBesoinAchat")
-public class ProformaArticleBesoinAchat {
-
+public class ProformaArticleBesoinAchat extends BDD {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idProformaBesoinAchat")
-    private Long idProformaBesoinAchat;
+     int idProformaBesoinAchat;
 
-    private int idProforma;
+     int idProforma;
 
-    private int idArticleBesoinAchat;
+     int idArticleBesoinAchat;
 
-    @Column(name = "dateLivraison")
-    private Date dateLivraison;
+    Timestamp dateLiaison;
 
     // Constructors, getters, and setters
 
@@ -25,19 +31,19 @@ public class ProformaArticleBesoinAchat {
         // Default constructor
     }
 
-    public ProformaArticleBesoinAchat(int idProforma, int idArticleBesoinAchat, Date dateLivraison) {
+    public ProformaArticleBesoinAchat(int idProforma, int idArticleBesoinAchat, Timestamp dateLivraison) {
         this.idProforma = idProforma;
         this.idArticleBesoinAchat = idArticleBesoinAchat;
-        this.dateLivraison = dateLivraison;
+        this.dateLiaison = dateLivraison;
     }
 
     // Getters and setters
 
-    public Long getIdProformaBesoinAchat() {
+    public int getIdProformaBesoinAchat() {
         return idProformaBesoinAchat;
     }
 
-    public void setIdProformaBesoinAchat(Long idProformaBesoinAchat) {
+    public void setIdProformaBesoinAchat(int idProformaBesoinAchat) {
         this.idProformaBesoinAchat = idProformaBesoinAchat;
     }
 
@@ -57,12 +63,12 @@ public class ProformaArticleBesoinAchat {
         this.idArticleBesoinAchat = idArticleBesoinAchat;
     }
 
-    public Date getDateLivraison() {
-        return dateLivraison;
+    public Timestamp getDateLiaison() {
+        return dateLiaison;
     }
 
-    public void setDateLivraison(Date dateLivraison) {
-        this.dateLivraison = dateLivraison;
+    public void setDateLiaison(Timestamp dateLiaison) {
+        this.dateLiaison = dateLiaison;
     }
 }
 

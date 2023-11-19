@@ -4,7 +4,7 @@ import { CButton, CCard, CCardBody, CCardHeader, CCardSubtitle, CCardTitle, CCol
 import React, { useEffect, useRef, useState } from 'react'
 import { NavLink, useParams } from 'react-router-dom'
 import { makeRequest } from 'src/Api';
-import DemandeProformaBesoin from '../demamdeProforma/DemandeProforma';
+import DemandeProformaBesoin from '../demandeProforma/DemandeProforma';
 
 export const getDetailsBesoinAchat = (idBesoinAchat) => {
     return new Promise((resolve, reject) => {

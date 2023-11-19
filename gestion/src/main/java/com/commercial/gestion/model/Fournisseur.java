@@ -170,7 +170,7 @@ public static ArrayList<Fournisseur> allFournisseur()
             throw new RuntimeException(e);
         }
     }
-    public Fournisseur getFournisseurById(int idFournisseur)
+    public static Fournisseur getFournisseurById(int idFournisseur)
     {
         Fournisseur f=new Fournisseur();
         ArrayList<String[]> allFournisseurBDD=f.select();
