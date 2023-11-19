@@ -131,4 +131,8 @@ public ArticleBonDeCommande getArticleBonDeCommandeForArticle(int idArticle)
 
         return articleBonDeCommande;
     }
+
+    public Article getArticle() {
+        return Article.getArticleById(idArticle);
+    }
 }

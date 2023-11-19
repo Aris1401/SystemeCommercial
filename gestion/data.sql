@@ -74,4 +74,8 @@ VALUES
   ('Fournisseur Sécurité MG', '111111111', 'Alice Randriamampianina', '999999999', 'alice.randriamampianina@fournisseursecurite.mg', '1010 Avenue de la Sécurité, Fianarantsoa', 'Fianarantsoa', 'Fournisseur équipements de sécurité à Fianarantsoa, Madagascar', (SELECT idTypeProduit FROM TypeProduit WHERE nom = 'Equipements de sécurité')),
   ('Fournisseur Informatique MG', '777777777', 'Michel Razafindrakoto', '666666666', 'michel.razafindrakoto@fournisseurinformatique.mg', '1212 Rue de Informatique, Mahajanga', 'Mahajanga', 'Fournisseur informatique à Mahajanga, Madagascar', (SELECT idTypeProduit FROM TypeProduit WHERE nom = 'Logiciels et équipements informatiques'));
 
+
 INSERT INTO ConfigurationValues (designation, valeur) VALUES ('TVA', '20');
+INSERT INTO ConfigurationValues (designation, valeur) VALUES ('N_BonDeCommande_Format', '000000');
+
+INSERT INTO ModeDePaiement(nom) VALUES ('Carte Bancaire'), ('Cheque'), ('Espece');

@@ -1,6 +1,8 @@
 import React from 'react'
 import BesoinAchat from './views/commercial/besoinAchat/BesoinAchat'
 import DetailsBesoinAchat from './views/commercial/detailsBesoinAchat/DetailsBesoinAchat'
+import BonDeCommande from './views/commercial/bonDeCommande/BonDeCommande'
+import DetailsBonDeCommande from './views/commercial/detailsBonDeCommande/DetailsBonDeCommande'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
@@ -99,6 +101,8 @@ const routes = [
   { path: '/widgets', name: 'Widgets', element: Widgets },
   { path: '/besoinsachat/*', name: 'Besoins Achat', element: BesoinAchat },
   { path: '/detailsbesoinachat/:idBesoinAchat', name: 'Details Besoin Achat', element: DetailsBesoinAchat },
+  { path: '/bondecommandes', name: 'Bon de commande', element: BonDeCommande },
+  { path: '/detailsbondecommande/:idBonDeCommande', name: 'Details bon de commande', element: DetailsBonDeCommande }
 ]
 
 export default routes
