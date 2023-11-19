@@ -92,7 +92,7 @@ const DetailsBesoinAchat = () => {
                                             <div className='d-flex justify-content-end'>
                                                 <CButton style={{ fontSize: '.8rem' }} onClick={(e) => {
                                                     setSelectedArticleBesoin(articleBesoin.idArticleBesoinAchat)
-                                                    demandeAchatModalRef.current.showModal()
+                                                    demandeAchatModalRef.current.showModal(articleBesoin.idArticleBesoinAchat)
                                                 }}>Faire une demande de proforma</CButton>
                                             </div>
                                         </CTableDataCell>

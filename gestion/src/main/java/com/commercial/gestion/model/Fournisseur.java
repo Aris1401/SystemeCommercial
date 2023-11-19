@@ -6,8 +6,11 @@
 package com.commercial.gestion.model;
 
 import com.commercial.gestion.BDDIante.BDD;
+import com.commercial.gestion.aris.bdd.generic.GenericDAO;
+import com.commercial.gestion.dbAccess.ConnectTo;
 
 import java.lang.reflect.Array;
+import java.sql.Connection;
 import java.util.ArrayList;
 
 /**
@@ -129,7 +132,7 @@ public class Fournisseur extends BDD
      return insert;
  }
 //////////////////////////////////////////////////////////////////////////
-public ArrayList<Fournisseur> allFournisseur()
+public static ArrayList<Fournisseur> allFournisseur()
 {
     Fournisseur fournisseur=new Fournisseur();
     ArrayList<String[]> allFournisseurBDD=fournisseur.select();
@@ -146,12 +149,27 @@ public ArrayList<Fournisseur> allFournisseur()
         f.setAddresse(allFournisseurBDD.get(i)[6]);
         f.setLocalisation(allFournisseurBDD.get(i)[7]);
         f.setDescriptionFournisseur(allFournisseurBDD.get(i)[8]);
-        f.setIdTypeProduit(Integer.parseInt(allFournisseurBDD.get(i)[10]));
+        f.setIdTypeProduit(Integer.parseInt(allFournisseurBDD.get(i)[9]));
         allFournisseur.add(f);
     }
     return allFournisseur;
 }
 //////////////////////////////////////////////////////////////////////////
+    public TypeProduit getTypeProduit() {
+        GenericDAO<TypeProduit> typeProduitGenericDAO = new GenericDAO<>(TypeProduit.class);
+
+        try {
+            Connection c = ConnectTo.postgreS();
+
+            TypeProduit typeProduit = typeProduitGenericDAO.getFromDatabaseById(c, idTypeProduit);
+
+            c.close();
+
+            return typeProduit;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
     public Fournisseur getFournisseurById(int idFournisseur)
     {
         Fournisseur f=new Fournisseur();
@@ -167,7 +185,7 @@ public ArrayList<Fournisseur> allFournisseur()
             f.setAddresse(allFournisseurBDD.get(i)[6]);
             f.setLocalisation(allFournisseurBDD.get(i)[7]);
             f.setDescriptionFournisseur(allFournisseurBDD.get(i)[8]);
-            f.setIdTypeProduit(Integer.parseInt(allFournisseurBDD.get(i)[10]));
+            f.setIdTypeProduit(Integer.parseInt(allFournisseurBDD.get(i)[9]));
 
         }
         return f;

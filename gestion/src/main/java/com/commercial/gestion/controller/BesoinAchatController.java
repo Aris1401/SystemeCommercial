@@ -1,6 +1,6 @@
 package com.commercial.gestion.controller;
 
-import com.commercial.gestion.configuration.DemandeBesoinAchatConfiguration;
+import com.commercial.gestion.configuration.DemandeConfiguration;
 import com.commercial.gestion.model.ArticleBesoinAchat;
 import com.commercial.gestion.model.BesoinAchat;
 import com.commercial.gestion.response.ArticleQuantiteResponse;
@@ -27,7 +27,7 @@ public class BesoinAchatController {
         besoin.dontSave("idBesoinAchat");
         besoin.setDateBesoin(new Timestamp(System.currentTimeMillis()));
         besoin.setIdBesoinAchat(besoin.saveId());
-        besoin.setStatusBesoin(DemandeBesoinAchatConfiguration.EN_COURS);
+        besoin.setStatusBesoin(DemandeConfiguration.EN_COURS);
 
         return besoin;
     }

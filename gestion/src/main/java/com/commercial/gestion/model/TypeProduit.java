@@ -5,12 +5,15 @@
  */
 package com.commercial.gestion.model;
 
+import com.commercial.gestion.aris.bdd.annotations.PrimaryKey;
+
 /**
  *
  * @author BEST
  */
 public class TypeProduit
 {
+    @PrimaryKey
     int idTypeProduit;
     String nom;
 
