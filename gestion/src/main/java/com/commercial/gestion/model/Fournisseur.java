@@ -5,11 +5,16 @@
  */
 package com.commercial.gestion.model;
 
+import com.commercial.gestion.BDDIante.BDD;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 /**
  *
  * @author BEST
  */
-public class Fournisseur
+public class Fournisseur extends BDD
 {
   int idFournisseur;
   String nom;
@@ -101,5 +106,70 @@ public class Fournisseur
     public void setIdTypeProduit(int idTypeProduit) {
         this.idTypeProduit = idTypeProduit;
     }
-  
+ //////////////////////////////////////////////////////////////////////////
+ public boolean insertFournisseur(String nom,String contact,String nomResponsable,String contactResponsable,
+                                  String email,String addresse,String localisation,String descriptionFournisseur,
+                                  String idTypeProduit)
+ {
+     boolean insert=false;
+     Fournisseur f=new Fournisseur();
+     f.setNom(nom);
+     f.setContact(contact);
+     f.setNomResponsable(nomResponsable);
+     f.setContactResponsable(contactResponsable);
+     f.setEmail(email);
+     f.setAddresse(addresse);
+     f.setLocalisation(localisation);
+     f.setDescriptionFournisseur(descriptionFournisseur);
+     f.setIdTypeProduit(Integer.parseInt(idTypeProduit));
+     f.dontSave("idFournisseur");
+     f.save();
+     insert=true;
+
+     return insert;
+ }
+//////////////////////////////////////////////////////////////////////////
+public ArrayList<Fournisseur> allFournisseur()
+{
+    Fournisseur fournisseur=new Fournisseur();
+    ArrayList<String[]> allFournisseurBDD=fournisseur.select();
+    ArrayList<Fournisseur> allFournisseur=new ArrayList<Fournisseur>();
+    for(int i=0;i< allFournisseurBDD.size();i++)
+    {
+        Fournisseur f=new Fournisseur();
+        f.setIdFournisseur(Integer.parseInt(allFournisseurBDD.get(i)[0]));
+        f.setNom(allFournisseurBDD.get(i)[1]);
+        f.setContact(allFournisseurBDD.get(i)[2]);
+        f.setNomResponsable(allFournisseurBDD.get(i)[3]);
+        f.setContactResponsable(allFournisseurBDD.get(i)[4]);
+        f.setEmail(allFournisseurBDD.get(i)[5]);
+        f.setAddresse(allFournisseurBDD.get(i)[6]);
+        f.setLocalisation(allFournisseurBDD.get(i)[7]);
+        f.setDescriptionFournisseur(allFournisseurBDD.get(i)[8]);
+        f.setIdTypeProduit(Integer.parseInt(allFournisseurBDD.get(i)[10]));
+        allFournisseur.add(f);
+    }
+    return allFournisseur;
+}
+//////////////////////////////////////////////////////////////////////////
+    public Fournisseur getFournisseurById(int idFournisseur)
+    {
+        Fournisseur f=new Fournisseur();
+        ArrayList<String[]> allFournisseurBDD=f.select();
+        for(int i=0;i< allFournisseurBDD.size();i++)
+        {
+            f.setIdFournisseur(Integer.parseInt(allFournisseurBDD.get(i)[0]));
+            f.setNom(allFournisseurBDD.get(i)[1]);
+            f.setContact(allFournisseurBDD.get(i)[2]);
+            f.setNomResponsable(allFournisseurBDD.get(i)[3]);
+            f.setContactResponsable(allFournisseurBDD.get(i)[4]);
+            f.setEmail(allFournisseurBDD.get(i)[5]);
+            f.setAddresse(allFournisseurBDD.get(i)[6]);
+            f.setLocalisation(allFournisseurBDD.get(i)[7]);
+            f.setDescriptionFournisseur(allFournisseurBDD.get(i)[8]);
+            f.setIdTypeProduit(Integer.parseInt(allFournisseurBDD.get(i)[10]));
+
+        }
+        return f;
+    }
 }

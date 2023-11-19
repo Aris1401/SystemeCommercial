@@ -8,6 +8,7 @@ package com.commercial.gestion.model;
 import com.commercial.gestion.BDDIante.BDD;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 /**
  *
@@ -115,5 +116,48 @@ public class BonDeCommande extends BDD
      insert=true;
      return insert;
  }
-    ////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
+public ArrayList<BonDeCommande> allBonDeCommande()
+{
+    BonDeCommande b=new BonDeCommande();
+    ArrayList<String[]> allBonDeCommandeBDD=b.select();
+    ArrayList<BonDeCommande> allBonDeCommande=new ArrayList<BonDeCommande>();
+    for(int i=0;i<allBonDeCommandeBDD.size();i++)
+    {
+        BonDeCommande bonDeCommande=new BonDeCommande();
+        bonDeCommande.setIdBonDeCommande(Integer.parseInt(allBonDeCommandeBDD.get(i)[0]));
+        bonDeCommande.setDateCreation(Timestamp.valueOf(allBonDeCommandeBDD.get(i)[1]));
+        bonDeCommande.setIdFournisseur(Integer.parseInt(allBonDeCommandeBDD.get(i)[2]));
+        bonDeCommande.setIdBesoinAchat(Integer.parseInt(allBonDeCommandeBDD.get(i)[3]));
+        bonDeCommande.setDateLivraison(Timestamp.valueOf(allBonDeCommandeBDD.get(i)[4]));
+        bonDeCommande.setIdModeDePaiement(Integer.parseInt(allBonDeCommandeBDD.get(i)[5]));
+        bonDeCommande.setConditionDePaiement(allBonDeCommandeBDD.get(i)[6]);
+        bonDeCommande.setMontantTotal(Double.parseDouble(allBonDeCommandeBDD.get(i)[7]));
+        allBonDeCommande.add(bonDeCommande);
+    }
+    return allBonDeCommande;
+}
+////////////////////////////////////////////////////////////////////
+    public ArrayList<BonDeCommande> getBonDeCommandeForFournisseur(int idFournisseur)
+    {
+        BonDeCommande b=new BonDeCommande();
+        String condition="idFournisseur ="+idFournisseur;
+        ArrayList<String[]> allBonDeCommandeBDD=b.select(condition);
+        ArrayList<BonDeCommande> allBonDeCommande=new ArrayList<BonDeCommande>();
+        for(int i=0;i<allBonDeCommandeBDD.size();i++)
+        {
+            BonDeCommande bonDeCommande=new BonDeCommande();
+            bonDeCommande.setIdBonDeCommande(Integer.parseInt(allBonDeCommandeBDD.get(i)[0]));
+            bonDeCommande.setDateCreation(Timestamp.valueOf(allBonDeCommandeBDD.get(i)[1]));
+            bonDeCommande.setIdFournisseur(Integer.parseInt(allBonDeCommandeBDD.get(i)[2]));
+            bonDeCommande.setIdBesoinAchat(Integer.parseInt(allBonDeCommandeBDD.get(i)[3]));
+            bonDeCommande.setDateLivraison(Timestamp.valueOf(allBonDeCommandeBDD.get(i)[4]));
+            bonDeCommande.setIdModeDePaiement(Integer.parseInt(allBonDeCommandeBDD.get(i)[5]));
+            bonDeCommande.setConditionDePaiement(allBonDeCommandeBDD.get(i)[6]);
+            bonDeCommande.setMontantTotal(Double.parseDouble(allBonDeCommandeBDD.get(i)[7]));
+            allBonDeCommande.add(bonDeCommande);
+        }
+        return allBonDeCommande;
+    }
+////////////////////////////////////////////////////////////////////
 }
