@@ -495,10 +495,10 @@ public class GenericDAO<T> implements Serializable {
 			e.printStackTrace();
 		}
 
-		Field pkField = getPKField();
-		if (pkField != null) {
-			setFieldValue(pkField.getName(), generatedKey);
-		}
+//		Field pkField = getPKField();
+//		if (pkField != null) {
+//			setFieldValue(pkField.getName(), generatedKey);
+//		}
 		
 		return generatedKey;
 	}

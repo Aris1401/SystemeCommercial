@@ -8,15 +8,15 @@ package com.commercial.gestion.model;
 import com.commercial.gestion.BDDIante.BDD;
 import com.commercial.gestion.aris.bdd.generic.GenericDAO;
 import com.commercial.gestion.configuration.DemandeConfiguration;
+import com.commercial.gestion.configuration.ProformaConfiguration;
 import com.commercial.gestion.dbAccess.ConnectTo;
 import com.commercial.gestion.response.ArticleQuantiteResponse;
 import org.springframework.stereotype.Component;
 
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author BEST
@@ -193,5 +193,94 @@ public class BesoinAchat extends BDD {
 
     public String getStatusString() {
         return DemandeConfiguration.getStatusString(statusBesoin);
+    }
+
+    public double getEstimationMontantTotal() {
+        ArrayList<ArticleBesoinAchat> articleBesoinAchats = getArticlesBesoinAchat();
+
+        double estimation = 0;
+
+        for (ArticleBesoinAchat articleBesoinAchat : articleBesoinAchats) {
+            estimation += articleBesoinAchat.getEstimationPrix() * articleBesoinAchat.getQuantite();
+        }
+
+        return estimation;
+    }
+
+    public boolean cloreBesoin() {
+        return updateStatusBesoin(DemandeConfiguration.CLOT, new Timestamp(System.currentTimeMillis()));
+    }
+
+    public boolean validerBesoin(int idUtilisateur) {
+        ValidationBesoinAchat validationBesoinAchat = new ValidationBesoinAchat();
+        validationBesoinAchat.setDateValidation(new Timestamp(System.currentTimeMillis()));
+        validationBesoinAchat.setCommentaire("");
+        validationBesoinAchat.setIdUtilisateur(idUtilisateur);
+        validationBesoinAchat.setIdBesoinAchat(idBesoinAchat);
+        validationBesoinAchat.setStatusValidation(DemandeConfiguration.VALIDER);
+        validationBesoinAchat.dontSave("idValidationBonDeCommande");
+        validationBesoinAchat.save();
+
+        // TODO: Checker si l'utilisateur possede le profil necessaire
+        return updateStatusBesoin(DemandeConfiguration.VALIDER, null);
+    }
+
+    public boolean updateStatusBesoin(int status, Timestamp now) {
+        GenericDAO<BesoinAchat> besoinAchatGenericDAO = new GenericDAO<>(BesoinAchat.class);
+
+        try {
+            Connection c = ConnectTo.postgreS();
+
+            besoinAchatGenericDAO.addToSetUpdate("statusBesoin", status);
+            besoinAchatGenericDAO.addToSelection("idBesoinAchat", idBesoinAchat, "");
+            if (now != null) besoinAchatGenericDAO.addToSetUpdate("dateCloture", now.toString());
+            besoinAchatGenericDAO.updateInDatabase(c);
+
+            c.close();
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public ArrayList<BonDeCommande> genererBonDeCommandes() throws Exception {
+        // Obtenir tout les articles correspondants
+        ArrayList<ArticleBesoinAchat> articleBesoinAchats = getArticlesBesoinAchat();
+
+        // Regrouper les articles de meme fournisseurs par leurs pro-formas
+        Map<Integer, ArrayList<ArticleBesoinAchat>> articlesGroupees = new HashMap<>();
+        for (ArticleBesoinAchat articleBesoinAchat : articleBesoinAchats) {
+            ArrayList<Proforma> proformas = articleBesoinAchat.obtenirProformas();
+
+            // Checker des proformas sont inssufisants
+            if (proformas.size() < ProformaConfiguration.MIN_PROFORMA_COUNT) {
+                throw new Exception("Proformas insuffisants pour continuer. Minimum pour chaque article: " + ProformaConfiguration.MIN_PROFORMA_COUNT);
+            }
+
+            // Obtenir le ou les -10ans
+            ArrayList<Proforma> moinsDixAns = Proforma.getMoinsDixAns(proformas, articleBesoinAchat.getIdArticleBesoinAchat());
+
+            for (Proforma moinsDixAnsItem : moinsDixAns) {
+                ArticleBesoinAchat newArticle = new ArticleBesoinAchat(articleBesoinAchat);
+
+                // Remplacer la quantite
+                newArticle.setQuantite(moinsDixAnsItem.getQuantite());
+
+                // Ajouter au dictionnaire
+                ArrayList<ArticleBesoinAchat> listeArticleBesoinAchat = new ArrayList<>();
+                if (articlesGroupees.containsKey(moinsDixAnsItem.getIdFournisseur())) listeArticleBesoinAchat = articlesGroupees.get(moinsDixAnsItem.getIdFournisseur());
+                listeArticleBesoinAchat.add(newArticle);
+                articlesGroupees.put(moinsDixAnsItem.getIdFournisseur(), listeArticleBesoinAchat);
+            }
+        }
+
+        // Creation des bons de commande
+        ArrayList<BonDeCommande> bonDeCommandes = new ArrayList<>();
+        for (Map.Entry<Integer, ArrayList<ArticleBesoinAchat>> entry : articlesGroupees.entrySet()) {
+            bonDeCommandes.add(BonDeCommande.createBonDeCommande(entry.getKey(), entry.getValue()));
+        }
+
+        return bonDeCommandes;
     }
 }

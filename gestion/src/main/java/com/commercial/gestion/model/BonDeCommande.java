@@ -6,7 +6,11 @@
 package com.commercial.gestion.model;
 
 import com.commercial.gestion.BDDIante.BDD;
+import com.commercial.gestion.BDDIante.annotations.NotInTable;
+import com.commercial.gestion.dbAccess.ConnectTo;
+import com.commercial.gestion.genericModels.GenericBonDeCommande;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -28,6 +32,9 @@ public class BonDeCommande extends BDD
     String conditionDePaiement;
     double montantTotal;
     int statusBonDeCommande;
+
+    @NotInTable
+    ArrayList<ArticleBonDeCommande> articleBonDeCommandes;
 
     public int getIdBonDeCommande() {
         return idBonDeCommande;
@@ -239,4 +246,48 @@ public void validerBonDeCommande10(int idBonDeCommande,boolean ok,boolean okok) 
     }
 }
 //////////////////////////////////////////////////////////////////////
+    public static BonDeCommande createBonDeCommande(int idFournisseur, int idBesoinAchat, ArrayList<ArticleBesoinAchat> articleBesoinAchats) {
+        GenericBonDeCommande genericBonDeCommande = new GenericBonDeCommande();
+        genericBonDeCommande.setIdFournisseur(idFournisseur);
+        genericBonDeCommande.setIdBesoinAchat(idBesoinAchat);
+        genericBonDeCommande.setDateCreation(new Timestamp(System.currentTimeMillis()));
+
+        Connection c = null;
+        try {
+            c = ConnectTo.postgreS();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            c.setAutoCommit(false);
+
+            int idBonDeCommande = genericBonDeCommande.saveInDatabse(c);
+            if (idBonDeCommande == -1) {
+                c.rollback();
+                return null;
+            }
+
+            // Insertion des articles bon de commandes
+            for (ArticleBesoinAchat articleBesoinAchat : articleBesoinAchats) {
+                
+            }
+
+            c.commit();
+        } catch (Exception e) {
+            try {
+                c.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        } finally {
+            try {
+                c.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return null;
+    }
 }

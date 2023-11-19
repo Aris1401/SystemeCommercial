@@ -46,4 +46,9 @@ public class BesoinAchatController {
 
         return articleBesoinAchat;
     }
+
+    @GetMapping("/besoinsachat/valider/{idBesoinAchat}")
+    public void validerBesoinAchat(@PathVariable("idBesoinAchat") int idBesoinAchat) {
+
+    }
 }

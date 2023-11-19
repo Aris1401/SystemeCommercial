@@ -104,4 +104,7 @@ public ArticleBonDeCommande getArticleBonDeCommandeForArticle(int idArticle)
     return a;
 }
 //////////////////////////////////////////////////////////////////
+    public static ArticleBonDeCommande createArticleBonDeCommande(ArticleBesoinAchat articleBesoinAchat) {
+        return null;
+    }
 }

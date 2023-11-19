@@ -86,7 +86,7 @@ const DetailsBesoinAchat = () => {
                                     return <CTableRow key={index}>
                                         <CTableDataCell><p className='badge text-bg-info text-wrap'>{articleBesoin.article.nom}</p></CTableDataCell>
                                         <CTableDataCell>{`${articleBesoin.quantite} ${articleBesoin.unite.nom}`}</CTableDataCell>
-                                        <CTableDataCell className='fw-semibold'>0 Ar</CTableDataCell>
+                                        <CTableDataCell className='fw-semibold'>{ articleBesoin.estimationPrix } Ar</CTableDataCell>
                                         <CTableDataCell className='text-medium-emphasis' style={{ fontSize: '.9rem' }}>{articleBesoin.descriptionArticleBesoin}</CTableDataCell>
                                         <CTableDataCell style={{ verticalAlign: 'middle' }}>
                                             <div className='d-flex justify-content-end'>
@@ -105,7 +105,7 @@ const DetailsBesoinAchat = () => {
 
                 <CRow className='text-end mt-3'>
                     <CCol className='d-flex flex-column justify-content-end align-items-end gap-2'>
-                        <p className='text-medium-emphasis fw-bold mb-0' style={{ fontSize: '.9rem' }}>Estimation montant total: 0 Ar</p>
+                        <p className='text-medium-emphasis fw-bold mb-0' style={{ fontSize: '.9rem' }}>Estimation montant total: { besoinAchat && besoinAchat.estimationMontantTotal } Ar</p>
                         <CButton style={{ fontSize: '.9rem' }} disabled>Valider besoin</CButton>
                         <CButton style={{ fontSize: '.9rem' }} className='btn-success text-white' disabled>Generer bons de commandes</CButton>
                     </CCol>
