@@ -5,8 +5,8 @@
  */
 package com.commercial.gestion.model;
 
-import com.commercial.gestion.BDDIante.BDD;
 
+import com.commercial.gestion.BDDIante.BDD;
 import java.util.ArrayList;
 
 /**
@@ -68,6 +68,10 @@ public class Utilisateur extends BDD
 
     public void setIdTypeUtilisateur(int idTypeUtilisateur) {
         this.idTypeUtilisateur = idTypeUtilisateur;
+    }
+
+    public ArrayList<ProfilUtilisateur> getProfil() {
+        return null;
     }
 
     ////////////////////////////////////////////////////////////////////////
