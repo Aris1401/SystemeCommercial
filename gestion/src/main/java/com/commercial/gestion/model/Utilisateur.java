@@ -5,13 +5,15 @@
  */
 package com.commercial.gestion.model;
 
+
+import com.commercial.gestion.BDDIante.BDD;
 import java.util.ArrayList;
 
 /**
  *
  * @author BEST
  */
-public class Utilisateur 
+public class Utilisateur extends BDD
 {
     int idUtilisateur;
     String nom;
@@ -71,8 +73,23 @@ public class Utilisateur
     public ArrayList<ProfilUtilisateur> getProfil() {
         return null;
     }
+
     ////////////////////////////////////////////////////////////////////////
-
-
-    
+    public Utilisateur connect(String email,String motDePasse)
+    {
+        String condition=" WHERE email ="+email +" AND motDePasse="+motDePasse;
+        Utilisateur utilisateur =new Utilisateur();
+        ArrayList<String[]> allBDD=utilisateur.select(condition);
+        for(int i=0;i< allBDD.size();i++)
+        {
+            utilisateur.setIdUtilisateur(Integer.parseInt(allBDD.get(i)[0]));
+            utilisateur.setNom(allBDD.get(i)[1]);
+            utilisateur.setPrenom(allBDD.get(i)[2]);
+            utilisateur.setEmail(allBDD.get(i)[3]);
+            utilisateur.setMotDePasse(allBDD.get(i)[4]);
+            utilisateur.setIdTypeUtilisateur(Integer.parseInt(allBDD.get(i)[5]));
+        }
+    return utilisateur;
+    }
+    ///////////////////////////////////////////////////////////////////////
 }
