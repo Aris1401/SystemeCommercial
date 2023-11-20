@@ -217,8 +217,11 @@ create table DemandeAjoutArticle(
     idDemandeAjoutArticle serial,
     nomArticle VARCHAR(255),
     dateLivraison TIMESTAMP,
+    statusDemande int,
     PRIMARY KEY(idDemandeAjoutArticle)
 );
+
+-- ALTER TABLE DemandeAjoutArticle ADD COLUMN statusDemande int;
 
 create table ConfigurationValues(
     designation varchar(255),

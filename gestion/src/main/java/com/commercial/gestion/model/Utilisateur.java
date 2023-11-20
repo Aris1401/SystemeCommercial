@@ -5,6 +5,8 @@
  */
 package com.commercial.gestion.model;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author BEST
@@ -64,6 +66,10 @@ public class Utilisateur
 
     public void setIdTypeUtilisateur(int idTypeUtilisateur) {
         this.idTypeUtilisateur = idTypeUtilisateur;
+    }
+
+    public ArrayList<ProfilUtilisateur> getProfil() {
+        return null;
     }
     ////////////////////////////////////////////////////////////////////////
 

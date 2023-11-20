@@ -173,7 +173,8 @@ public static ArrayList<Fournisseur> allFournisseur()
     public static Fournisseur getFournisseurById(int idFournisseur)
     {
         Fournisseur f=new Fournisseur();
-        ArrayList<String[]> allFournisseurBDD=f.select();
+        String condition = "where idFournisseur = " + idFournisseur;
+        ArrayList<String[]> allFournisseurBDD=f.select(condition);
         for(int i=0;i< allFournisseurBDD.size();i++)
         {
             f.setIdFournisseur(Integer.parseInt(allFournisseurBDD.get(i)[0]));

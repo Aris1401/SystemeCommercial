@@ -74,7 +74,7 @@ public static Article getArticleById(int idArticle)
     return a;
 }
 /////////////////////////////////////////////////////////////
-public boolean insertArticle(String nom,String descriptionArticle)
+public static boolean insertArticle(String nom,String descriptionArticle)
 {
     boolean insert =false;
     Article article=new Article();
@@ -86,5 +86,8 @@ public boolean insertArticle(String nom,String descriptionArticle)
     return insert;
 }
 /////////////////////////////////////////////////////////////
-
+    public static void insertArticleByDemande(DemandeAjoutArticle demandeAjoutArticle) {
+        Article.insertArticle(demandeAjoutArticle.getNomArticle(), "");
+        demandeAjoutArticle.valider();
+    }
 }

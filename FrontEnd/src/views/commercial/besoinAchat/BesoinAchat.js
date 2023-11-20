@@ -6,6 +6,7 @@ import SelectionArticle from './components/SelectionArticle';
 import CIcon from '@coreui/icons-react';
 import { cilPlus } from '@coreui/icons';
 import { NavLink } from 'react-router-dom';
+import DemandeAjoutArticle from '../demandeAjoutArticle/DemandeAjoutArticle';
 
 const getValidBesoinsAchat = () => {
     return [];
@@ -121,6 +122,9 @@ const BesoinAchat = () => {
             }
         })
     }
+    
+    // Ajout article modal
+    const demandeAjoutArticleRef = useRef()
 
     return (
         <>
@@ -168,7 +172,11 @@ const BesoinAchat = () => {
                                 <CButton onClick={(e) => {
                                     handleAddingSelectionArticle(e);
                                 }}><CIcon icon={cilPlus}></CIcon>Ajouter article</CButton>
-                                <CNavLink to='/demadeajoutarticle' component={NavLink}>Aucun article correspondant?</CNavLink>
+                                <CButton
+                                    onClick={(e) => {
+                                        demandeAjoutArticleRef.current.showModal()
+                                    }}
+                                >Aucun article correspondant?</CButton>
                             </CCol>
                         </CRow>
 
@@ -201,6 +209,8 @@ const BesoinAchat = () => {
                     <ListeBesoinsAchat visibilityAjoutModal={visibilityAjoutModal} />
                 </CCardBody>
             </CCard>
+
+            <DemandeAjoutArticle ref={demandeAjoutArticleRef} />
         </>
     );
 }

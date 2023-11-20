@@ -299,7 +299,7 @@ const _nav = [
   //   name: 'Docs',
   //   href: 'https://coreui.io/react/docs/templates/installation/',
   //   icon: <CIcon icon={cilDescription} customClassName="nav-icon" />,
-  // },
+  // },Articles
   {
     component: CNavItem,
     name: 'Besoins Achat',
@@ -311,6 +311,18 @@ const _nav = [
     name: 'Bon de commandes',
     to: '/bondecommandes',
     icon: <CIcon icon={cilDescription} customClassName="nav-icon" />
+  },
+  {
+    component: CNavGroup,
+    name: 'Donnees',
+    icon: <CIcon icon={cilDescription} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Articles',
+        to: '/articles',
+      },
+    ]
   }
 ]
 
