@@ -65,5 +65,8 @@ public class Utilisateur
     public void setIdTypeUtilisateur(int idTypeUtilisateur) {
         this.idTypeUtilisateur = idTypeUtilisateur;
     }
+    ////////////////////////////////////////////////////////////////////////
+
+
     
 }
