@@ -5,13 +5,15 @@
  */
 package com.commercial.gestion.model;
 
+import com.commercial.gestion.BDDIante.BDD;
+
 import java.sql.Timestamp;
 
 /**
  *
  * @author BEST
  */
-public class ValidationBesoinAchat
+public class ValidationBesoinAchat extends BDD
 {
     int idValidationBesoinAchat;
     int idBesoinAchat; 

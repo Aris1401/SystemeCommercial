@@ -161,11 +161,14 @@ create table BonDeCommande(
     idModeDePaiement int,
     conditionDePaiement VARCHAR(255),
     montantTotal DECIMAL,
+    statusBonDeCommande int,
     PRIMARY KEY(idBonDeCommande),
     FOREIGN KEY(idFournisseur) REFERENCES Fournisseur(idFournisseur),
     FOREIGN KEY(idBesoinAchat) REFERENCES BesoinAchat(idBesoinAchat),
     FOREIGN KEY(idModeDePaiement) REFERENCES ModeDePaiement(idModeDePaiement)
 );
+
+-- ALTER TABLE BonDeCommande ADD COLUMN statusBonDeCommande int;
 
 create table ArticleBonDeCommande(
     idArticleBonDeCommande serial,
@@ -194,7 +197,7 @@ create table ProformaArticleBesoinAchat(
     idProformaBesoinAchat serial,
     idProforma int,
     idArticleBesoinAchat int,
-    dateLivraison TIMESTAMP,
+    dateLiaison TIMESTAMP,
     PRIMARY KEY(idProformaBesoinAchat),
     FOREIGN KEY(idArticleBesoinAchat) REFERENCES ArticleBesoinAchat(idArticleBesoinAchat)
 );
@@ -217,3 +220,7 @@ create table DemandeAjoutArticle(
     PRIMARY KEY(idDemandeAjoutArticle)
 );
 
+create table ConfigurationValues(
+    designation varchar(255),
+    valeur varchar(255)
+);

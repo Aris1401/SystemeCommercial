@@ -44,3 +44,38 @@ INSERT INTO Profil (nom, idService) VALUES
     ('Finances', (SELECT idService FROM Service WHERE nom = 'Comptable')),
     ('Direction Générale', null),
     ('Chef de Département', null);
+
+-- Insérer les types de produits correspondant aux catégories spécifiées
+INSERT INTO TypeProduit (nom)
+VALUES
+    ('Formations'),
+    ('Manuels'),
+    ('Kits de recrutement et de facturation'),
+    ('Equipements de sécurité'),
+    ('Logiciels et équipements informatiques');
+
+-- Insérer des fournisseurs avec les types de produits correspondants
+-- Insérer des fournisseurs malgaches avec les types de produits correspondants
+INSERT INTO Fournisseur (
+  nom,
+  contact,
+  nomResponsable,
+  contactResponsable,
+  email,
+  addresse,
+  localisation,
+  descriptionFournisseur,
+  idTypeProduit
+)
+VALUES
+  ('Fournisseur Formations MG', '123456789', 'Jean Rajaonarison', '987654321', 'jean.rajaonarison@fournisseurformations.mg', '123 Avenue des Formateurs, Antananarivo', 'Antananarivo', 'Fournisseur de formations à Antananarivo, Madagascar', (SELECT idTypeProduit FROM TypeProduit WHERE nom = 'Formations')),
+  ('Fournisseur Manuels MG', '987654321', 'Sylvie Andrianampoinimerina', '123456789', 'sylvie.andrianampoinimerina@fournisseurmanuels.mg', '456 Rue des Manuels, Toamasina', 'Toamasina', 'Fournisseur de manuels à Toamasina, Madagascar', (SELECT idTypeProduit FROM TypeProduit WHERE nom = 'Manuels')),
+  ('Fournisseur Kits MG', '555555555', 'Rakoto Ramiaramanana', '444444444', 'rakoto.ramiaramanana@fournisseurkits.mg', '789 Boulevard des Kits, Antsirabe', 'Antsirabe', 'Fournisseur de kits à Antsirabe, Madagascar', (SELECT idTypeProduit FROM TypeProduit WHERE nom = 'Kits de recrutement et de facturation')),
+  ('Fournisseur Sécurité MG', '111111111', 'Alice Randriamampianina', '999999999', 'alice.randriamampianina@fournisseursecurite.mg', '1010 Avenue de la Sécurité, Fianarantsoa', 'Fianarantsoa', 'Fournisseur équipements de sécurité à Fianarantsoa, Madagascar', (SELECT idTypeProduit FROM TypeProduit WHERE nom = 'Equipements de sécurité')),
+  ('Fournisseur Informatique MG', '777777777', 'Michel Razafindrakoto', '666666666', 'michel.razafindrakoto@fournisseurinformatique.mg', '1212 Rue de Informatique, Mahajanga', 'Mahajanga', 'Fournisseur informatique à Mahajanga, Madagascar', (SELECT idTypeProduit FROM TypeProduit WHERE nom = 'Logiciels et équipements informatiques'));
+
+
+INSERT INTO ConfigurationValues (designation, valeur) VALUES ('TVA', '20');
+INSERT INTO ConfigurationValues (designation, valeur) VALUES ('N_BonDeCommande_Format', '000000');
+
+INSERT INTO ModeDePaiement(nom) VALUES ('Carte Bancaire'), ('Cheque'), ('Espece');
