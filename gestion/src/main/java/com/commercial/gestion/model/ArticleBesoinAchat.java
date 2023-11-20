@@ -23,6 +23,17 @@ public class ArticleBesoinAchat extends BDD {
     int idUnite;
     String descriptionArticleBesoin;
 
+    public ArticleBesoinAchat() {}
+
+    public ArticleBesoinAchat(ArticleBesoinAchat other) {
+        this.idArticleBesoinAchat = other.idArticleBesoinAchat;
+        this.idArticle = other.idArticle;
+        this.idBesoinAchat = other.idBesoinAchat;
+        this.quantite = other.quantite;
+        this.idUnite = other.idUnite;
+        this.descriptionArticleBesoin = other.descriptionArticleBesoin;
+    }
+
     public int getIdArticleBesoinAchat() {
         return idArticleBesoinAchat;
     }
@@ -128,5 +139,22 @@ public class ArticleBesoinAchat extends BDD {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public ArrayList<Proforma> obtenirProformas() {
+        return Proforma.obtenirProformaBesoinArticle(idArticleBesoinAchat);
+    }
+
+    public double getEstimationPrix() {
+        double estimation = 0;
+
+        ArrayList<Proforma> proformas = Proforma.getMoinsDixAns(obtenirProformas(), idArticleBesoinAchat);
+        for (Proforma proforma : proformas) {
+            estimation += proforma.getPrixUnitaire();
+        }
+
+        estimation /= proformas.size();
+
+        return estimation;
     }
 }

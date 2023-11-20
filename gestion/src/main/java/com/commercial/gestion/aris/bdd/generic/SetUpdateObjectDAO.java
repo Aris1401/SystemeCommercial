@@ -1,6 +1,7 @@
 package com.commercial.gestion.aris.bdd.generic;
 
 import java.lang.reflect.Type;
+import java.sql.Timestamp;
 
 public class SetUpdateObjectDAO {
 	String name;
@@ -34,7 +35,7 @@ public class SetUpdateObjectDAO {
 	
 	// Function
 	public String toString() {
-		if (getType() == String.class || getType() == java.util.Date.class || getType() == java.sql.Date.class) {
+		if (getType() == String.class || getType() == Timestamp.class || getType() == java.util.Date.class || getType() == java.sql.Date.class) {
 			return name + " = '" + value + "'";
 		} else {
 			return name + " = " + value;

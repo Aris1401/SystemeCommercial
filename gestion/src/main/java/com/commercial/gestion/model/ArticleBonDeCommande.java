@@ -103,5 +103,36 @@ public ArticleBonDeCommande getArticleBonDeCommandeForArticle(int idArticle)
     }
     return a;
 }
+    public double getTotalPrixHorsTaxe() {
+        return getPrixUnitaireHT() * getQuantite();
+    }
+
+    public double getTotalPrixTTC() {
+        return (getPrixUnitaireHT() * getQuantite()) + getTVA();
+    }
+
 //////////////////////////////////////////////////////////////////
+    public static ArticleBonDeCommande createArticleBonDeCommande(int idBonDeCommande, ArticleBesoinAchat articleBesoinAchat) {
+        ArticleBonDeCommande articleBonDeCommande = new ArticleBonDeCommande();
+        articleBonDeCommande.setIdBonDeCommande(idBonDeCommande);
+
+        // Obtention de tva
+        final double TVA = Double.parseDouble(ConfigurationValues.getConfigurationValue("TVA"));
+
+        double prixUnitaireHT = articleBesoinAchat.getEstimationPrix();
+        double prixTotal = (prixUnitaireHT * articleBesoinAchat.getQuantite());
+        double prixTVA = prixTotal * (TVA / 100);
+
+        articleBonDeCommande.setTVA(prixTVA);
+        articleBonDeCommande.setPrixUnitaireHT(prixUnitaireHT);
+
+        articleBonDeCommande.setQuantite(articleBesoinAchat.getQuantite());
+        articleBonDeCommande.setIdArticle(articleBesoinAchat.getIdArticle());
+
+        return articleBonDeCommande;
+    }
+
+    public Article getArticle() {
+        return Article.getArticleById(idArticle);
+    }
 }

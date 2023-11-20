@@ -12,13 +12,13 @@ import com.commercial.gestion.dbAccess.ConnectTo;
 import java.sql.Connection;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
- *
  * @author BEST
  */
-public class Proforma extends BDD
-{
+public class Proforma extends BDD {
     int idProforma;
     int idFournisseur;
     Timestamp dateObtention;
@@ -75,68 +75,66 @@ public class Proforma extends BDD
     }
 
     ////////////////////////////////////////////////////////////////////////////
-public ArrayList<Proforma> allProforma()
-{
-    Proforma proforma=new Proforma();
-    ArrayList<String[]> allProformaBDD=proforma.select();
-    ArrayList<Proforma> allProforma=new ArrayList<Proforma>();
-    for(int i=0;i< allProformaBDD.size();i++)
-    {
-        Proforma p=new Proforma();
-        p.setIdProforma(Integer.parseInt(allProformaBDD.get(i)[0]));
-        p.setIdFournisseur(Integer.parseInt(allProformaBDD.get(i)[1]));
-        p.setDateObtention(Timestamp.valueOf(allProformaBDD.get(i)[2]));
-        p.setPrixUnitaire(Double.parseDouble(allProformaBDD.get(i)[3]));
-        p.setQuantite(Double.parseDouble(allProformaBDD.get(i)[4]));
-        p.setIdArticle(Integer.parseInt(allProformaBDD.get(i)[5]));
+    public ArrayList<Proforma> allProforma() {
+        Proforma proforma = new Proforma();
+        ArrayList<String[]> allProformaBDD = proforma.select();
+        ArrayList<Proforma> allProforma = new ArrayList<Proforma>();
+        for (int i = 0; i < allProformaBDD.size(); i++) {
+            Proforma p = new Proforma();
+            p.setIdProforma(Integer.parseInt(allProformaBDD.get(i)[0]));
+            p.setIdFournisseur(Integer.parseInt(allProformaBDD.get(i)[1]));
+            p.setDateObtention(Timestamp.valueOf(allProformaBDD.get(i)[2]));
+            p.setPrixUnitaire(Double.parseDouble(allProformaBDD.get(i)[3]));
+            p.setQuantite(Double.parseDouble(allProformaBDD.get(i)[4]));
+            p.setIdArticle(Integer.parseInt(allProformaBDD.get(i)[5]));
 
-        allProforma.add(p);
+            allProforma.add(p);
+        }
+        return allProforma;
     }
-      return allProforma;
-}
-////////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////
     public Fournisseur getFournisseur() {
         return Fournisseur.getFournisseurById(idFournisseur);
     }
-public ArrayList<Proforma> allProformaForArticle(int idArticle)
-{
-    Proforma proforma=new Proforma();
-    String condition="idArticle="+idArticle;
-    ArrayList<String[]> allProformaBDD=proforma.select(condition);
-    ArrayList<Proforma> allProforma=new ArrayList<Proforma>();
-    for(int i=0;i< allProformaBDD.size();i++)
-    {
-        Proforma p=new Proforma();
-        p.setIdProforma(Integer.parseInt(allProformaBDD.get(i)[0]));
-        p.setIdFournisseur(Integer.parseInt(allProformaBDD.get(i)[1]));
-        p.setDateObtention(Timestamp.valueOf(allProformaBDD.get(i)[2]));
-        p.setPrixUnitaire(Double.parseDouble(allProformaBDD.get(i)[3]));
-        p.setQuantite(Double.parseDouble(allProformaBDD.get(i)[4]));
-        p.setIdArticle(Integer.parseInt(allProformaBDD.get(i)[5]));
 
-        allProforma.add(p);
+    public ArrayList<Proforma> allProformaForArticle(int idArticle) {
+        Proforma proforma = new Proforma();
+        String condition = "idArticle=" + idArticle;
+        ArrayList<String[]> allProformaBDD = proforma.select(condition);
+        ArrayList<Proforma> allProforma = new ArrayList<Proforma>();
+        for (int i = 0; i < allProformaBDD.size(); i++) {
+            Proforma p = new Proforma();
+            p.setIdProforma(Integer.parseInt(allProformaBDD.get(i)[0]));
+            p.setIdFournisseur(Integer.parseInt(allProformaBDD.get(i)[1]));
+            p.setDateObtention(Timestamp.valueOf(allProformaBDD.get(i)[2]));
+            p.setPrixUnitaire(Double.parseDouble(allProformaBDD.get(i)[3]));
+            p.setQuantite(Double.parseDouble(allProformaBDD.get(i)[4]));
+            p.setIdArticle(Integer.parseInt(allProformaBDD.get(i)[5]));
+
+            allProforma.add(p);
+        }
+        return allProforma;
     }
-    return allProforma;
-}
-////////////////////////////////////////////////////////////////////////////
-public boolean insertProforma(String idFournisseur,String dateObtention,String priUnitaire,String quantite,String idArticle)
-{
-    boolean insert=false;
 
-    Proforma p=new Proforma();
-    p.setIdFournisseur(Integer.parseInt(idFournisseur));
-    p.setDateObtention(Timestamp.valueOf(dateObtention));
-    p.setPrixUnitaire(Double.parseDouble(priUnitaire));
-    p.setQuantite(Double.parseDouble(quantite));
-    p.setIdArticle(Integer.parseInt(idArticle));
-    p.dontSave("idProforma");
-    p.save();
-    insert=true;
-    return insert;
-}
+    ////////////////////////////////////////////////////////////////////////////
+    public boolean insertProforma(String idFournisseur, String dateObtention, String priUnitaire, String quantite, String idArticle) {
+        boolean insert = false;
 
-////////////////////////////////////////////////////////////////////////////
-    public static ArrayList<Proforma> obtenirProformaBesoinArticle(int idArticleBesoinAchat){
+        Proforma p = new Proforma();
+        p.setIdFournisseur(Integer.parseInt(idFournisseur));
+        p.setDateObtention(Timestamp.valueOf(dateObtention));
+        p.setPrixUnitaire(Double.parseDouble(priUnitaire));
+        p.setQuantite(Double.parseDouble(quantite));
+        p.setIdArticle(Integer.parseInt(idArticle));
+        p.dontSave("idProforma");
+        p.save();
+        insert = true;
+        return insert;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    public static ArrayList<Proforma> obtenirProformaBesoinArticle(int idArticleBesoinAchat) {
         ArrayList<Proforma> proformas = new ArrayList<>();
         try {
             Connection c = ConnectTo.postgreS();
@@ -164,41 +162,72 @@ public boolean insertProforma(String idFournisseur,String dateObtention,String p
         return proformas;
     }
 
-//////////////////////////////////////////////////////////////////////
-public ArrayList<Proforma> TrierPrix(int idArticle) {
-    Proforma proforma = new Proforma();
-    String condition = "idArticle =" + idArticle;
-    ArrayList<String[]> allProformaBDD = proforma.select(condition);
-    ArrayList<Proforma> allP = new ArrayList<Proforma>();
+    //////////////////////////////////////////////////////////////////////
+    public ArrayList<Proforma> TrierPrix(int idArticle) {
+        Proforma proforma = new Proforma();
+        String condition = "idArticle =" + idArticle;
+        ArrayList<String[]> allProformaBDD = proforma.select(condition);
+        ArrayList<Proforma> allP = new ArrayList<Proforma>();
 
-    for (int i = 0; i < allProformaBDD.size(); i++) {
-        Proforma p = new Proforma();
-        p.setIdProforma(Integer.parseInt(allProformaBDD.get(i)[0]));
-        p.setIdFournisseur(Integer.parseInt(allProformaBDD.get(i)[1]));
-        p.setDateObtention(Timestamp.valueOf(allProformaBDD.get(i)[2]));
-        p.setPrixUnitaire(Double.parseDouble(allProformaBDD.get(i)[3]));
-        p.setQuantite(Double.parseDouble(allProformaBDD.get(i)[4]));
-        p.setIdArticle(Integer.parseInt(allProformaBDD.get(i)[5]));
-        allP.add(p);
-    }
-    ArrayList<Proforma> vrai = new ArrayList<>();
-
-    for (int i = allP.size(); i > 0; i--) {
-        Proforma maxP = allP.get(0);
-        for (int j = 0; j < allP.size(); j++)
-        {
-            Proforma p = allP.get(j);
-            if (p.getPrixUnitaire() > maxP.getPrixUnitaire())
-            {
-                maxP = p;
-            }
+        for (int i = 0; i < allProformaBDD.size(); i++) {
+            Proforma p = new Proforma();
+            p.setIdProforma(Integer.parseInt(allProformaBDD.get(i)[0]));
+            p.setIdFournisseur(Integer.parseInt(allProformaBDD.get(i)[1]));
+            p.setDateObtention(Timestamp.valueOf(allProformaBDD.get(i)[2]));
+            p.setPrixUnitaire(Double.parseDouble(allProformaBDD.get(i)[3]));
+            p.setQuantite(Double.parseDouble(allProformaBDD.get(i)[4]));
+            p.setIdArticle(Integer.parseInt(allProformaBDD.get(i)[5]));
+            allP.add(p);
         }
-        vrai.add(maxP);
-        allP.remove(maxP);
+        ArrayList<Proforma> vrai = new ArrayList<>();
+
+        for (int i = allP.size(); i > 0; i--) {
+            Proforma maxP = allP.get(0);
+            for (int j = 0; j < allP.size(); j++) {
+                Proforma p = allP.get(j);
+                if (p.getPrixUnitaire() > maxP.getPrixUnitaire()) {
+                    maxP = p;
+                }
+            }
+            vrai.add(maxP);
+            allP.remove(maxP);
+        }
+        return vrai;
     }
-    return vrai;
-}
 
-//////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
+    public static ArrayList<Proforma> getMoinsDixAns(ArrayList<Proforma> listeProforma, int idArticleBesoinAchat) {
+        ArticleBesoinAchat articleBesoinAchat = ArticleBesoinAchat.getArticleBesoinAchatById(idArticleBesoinAchat);
 
+        // Sort proforma par prix unitaire
+        listeProforma.sort(Comparator.comparingDouble(Proforma::getPrixUnitaire));
+
+        ArrayList<Proforma> moisDixAns = new ArrayList<>();
+        int moinsDixAnsIndex = 0;
+
+        // Tant que la quantité dans ArticleBesoinAchat n'est pas suffisante
+        while (moinsDixAnsIndex < listeProforma.size() && articleBesoinAchat.getQuantite() > 0) {
+            Proforma proformaActuel = listeProforma.get(moinsDixAnsIndex);
+
+            // Calculer la quantité à ajouter (minimum entre la quantité dans le Proforma actuel et la quantité dans ArticleBesoinAchat)
+            double quantiteAjouter = Math.min(proformaActuel.getQuantite(), articleBesoinAchat.getQuantite());
+
+            // Créer une nouvelle instance de Proforma avec la quantité correcte et ajouter à moisDixAns
+            Proforma proformaAjouter = new Proforma();
+            proformaAjouter.setIdProforma(proformaActuel.getIdProforma());
+            proformaAjouter.setIdFournisseur(proformaActuel.getIdFournisseur());
+            proformaAjouter.setDateObtention(proformaActuel.getDateObtention());
+            proformaAjouter.setPrixUnitaire(proformaActuel.getPrixUnitaire());
+            proformaAjouter.setQuantite(quantiteAjouter);
+            proformaAjouter.setIdArticle(proformaActuel.getIdArticle());
+            moisDixAns.add(proformaAjouter);
+
+            // Mettre à jour la quantité dans ArticleBesoinAchat
+            articleBesoinAchat.setQuantite(articleBesoinAchat.getQuantite() - quantiteAjouter);
+
+            moinsDixAnsIndex++;
+        }
+
+        return moisDixAns;
+    }
 }
