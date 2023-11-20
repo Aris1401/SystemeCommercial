@@ -73,12 +73,11 @@ public class ProfilUtilisateur extends BDD
         return all;
     }
     ////////////////////////////////////////////////////////////////////////////
-    public ProfilUtilisateur getProfil(String email,String motDePasse,Utilisateur user)
+    public ArrayList<ProfilUtilisateur> getProfil(Utilisateur user)
     {
        ProfilUtilisateur p=new ProfilUtilisateur();
-       user=new Utilisateur();
-       user=user.connect(email,motDePasse);
        ArrayList<ProfilUtilisateur>all= allProfilUser();
+       ArrayList<ProfilUtilisateur> pp=new ArrayList<ProfilUtilisateur>();
        for(int i=0;i<all.size();i++)
         {
             if(user.getIdUtilisateur()==all.get(i).getIdUtilisateur())
@@ -87,9 +86,10 @@ public class ProfilUtilisateur extends BDD
                 p.setIdUtilisateur(all.get(i).getIdUtilisateur());
                 p.setIdProfil(all.get(i).getIdProfil());
                 p.setDateAjout(all.get(i).getDateAjout());
+                pp.add(p);
             }
         }
-       return p;
+       return pp;
     }
     ////////////////////////////////////////////////////////////////////////////
     
