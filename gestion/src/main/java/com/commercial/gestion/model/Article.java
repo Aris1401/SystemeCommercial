@@ -86,4 +86,5 @@ public boolean insertArticle(String nom,String descriptionArticle)
     return insert;
 }
 /////////////////////////////////////////////////////////////
+
 }
