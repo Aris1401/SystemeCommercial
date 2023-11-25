@@ -236,6 +236,7 @@ create table DemandeProformaCoteFournisseur(
     idUnite INT,
     quantite DECIMAL(18, 5),
     idFournisseur INT,
+    etat INT,
     lienEmail TEXT
 );
 
