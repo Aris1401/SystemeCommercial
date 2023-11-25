@@ -2,9 +2,7 @@ package com.commercial.gestion.controller;
 
 import com.commercial.gestion.model.Service;
 import com.commercial.gestion.repository.ServiceRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -24,5 +22,15 @@ public class ServiceController {
     @GetMapping("/services/{id}")
     public Optional<Service> getService(@PathVariable("id") int id) {
         return serviceRepository.findById((long) id);
+    }
+
+    @PostMapping("/services")
+    public Service addService(@RequestBody Service service) {
+        return serviceRepository.save(service);
+    }
+
+    @PostMapping("/services/update")
+    public void updateService(@RequestBody Service service) {
+        serviceRepository.updateService(service.getIdService(), service.getNom());
     }
 }

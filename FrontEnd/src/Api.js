@@ -44,6 +44,9 @@ export const makeRequest = ({
     case 'DELETE':
       promise = API.delete(url, requestConfiguration)
       break
+    case 'PUT':
+      promise = API.put(url, values, requestConfiguration)
+      break
     default:
       return
   }

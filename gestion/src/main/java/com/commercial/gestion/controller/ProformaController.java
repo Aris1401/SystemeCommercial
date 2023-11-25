@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 @RestController
 public class ProformaController {
@@ -67,7 +68,9 @@ public class ProformaController {
 
     @GetMapping("proformas/articlebesoinachat/{idArticleBesoinAchat}")
     public ArrayList<Proforma> getProformaArticleBesoinAchat(@PathVariable("idArticleBesoinAchat") int idArticleBesoinAchat) {
-        return Proforma.obtenirProformaBesoinArticle(idArticleBesoinAchat);
+        ArrayList<Proforma> proformas = Proforma.obtenirProformaBesoinArticle(idArticleBesoinAchat);
+        proformas.sort(Comparator.comparingDouble(proforma -> proforma.getPrixUnitaire()));
+        return proformas;
     }
     @GetMapping("/proformas/fournisseur/{idFournisseur}/ArticleBesoinAchat/{idArticleBesoinAchat}")
     public DemandeProforma checkDemandeProforma(@PathVariable("idFournisseur") int idFournisseur, @PathVariable("idArticleBesoinAchat") int idArticleBesoinAchat) {

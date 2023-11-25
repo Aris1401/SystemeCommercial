@@ -86,7 +86,7 @@ const SelectionArticle = forwardRef((props, ref) => {
                 <CInputGroup style={{ width: '35%' }}>
                     <CFormInput type='number' ref={quantiteRef} step={0.01} floatingLabel='Quantite' />
 
-                    <CFormSelect floatingLabel='Unite' ref={uniteRef} options={['Unites', ...unitesOptions]} />
+                    <CFormSelect floatingLabel='Unite' ref={uniteRef} options={unitesOptions} />
                 </CInputGroup>
 
                 <CButton onClick={(e) => { onRemove(e, index) }} ><CIcon icon={cilTrash} /></CButton>

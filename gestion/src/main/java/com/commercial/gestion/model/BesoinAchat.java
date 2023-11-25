@@ -9,11 +9,12 @@ import com.commercial.gestion.BDDIante.BDD;
 import com.commercial.gestion.aris.bdd.generic.GenericDAO;
 import com.commercial.gestion.configuration.DemandeConfiguration;
 import com.commercial.gestion.configuration.ProformaConfiguration;
+import com.commercial.gestion.validation.IValidable;
+import com.commercial.gestion.validation.ValidationBesoinAchatConfiguration;
 import com.commercial.gestion.dbAccess.ConnectTo;
 import com.commercial.gestion.response.ArticleQuantiteResponse;
 import org.springframework.stereotype.Component;
 
-import java.sql.Array;
 import java.sql.Connection;
 import java.sql.Timestamp;
 import java.util.*;
@@ -22,7 +23,7 @@ import java.util.*;
  * @author BEST
  */
 @Component
-public class BesoinAchat extends BDD {
+public class BesoinAchat extends BDD implements IValidable {
     int idBesoinAchat;
     int idService;
     Timestamp dateBesoin;
@@ -113,7 +114,7 @@ public class BesoinAchat extends BDD {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    public ArrayList<BesoinAchat> allClosedBesoinAchat() {
+    public static ArrayList<BesoinAchat> allClosedBesoinAchat() {
         String condition = "where statusBesoin = " + String.valueOf(DemandeConfiguration.VALIDER) + " or statusBesoin = " + String.valueOf(DemandeConfiguration.REFUSER);
         BesoinAchat besoinAchat = new BesoinAchat();
         ArrayList<String[]> allBesoinAchatBDD = besoinAchat.select(condition);
@@ -211,18 +212,63 @@ public class BesoinAchat extends BDD {
         return updateStatusBesoin(DemandeConfiguration.CLOT, new Timestamp(System.currentTimeMillis()));
     }
 
-    public boolean validerBesoin(int idUtilisateur) {
-        ValidationBesoinAchat validationBesoinAchat = new ValidationBesoinAchat();
-        validationBesoinAchat.setDateValidation(new Timestamp(System.currentTimeMillis()));
-        validationBesoinAchat.setCommentaire("");
-        validationBesoinAchat.setIdUtilisateur(idUtilisateur);
-        validationBesoinAchat.setIdBesoinAchat(idBesoinAchat);
-        validationBesoinAchat.setStatusValidation(DemandeConfiguration.VALIDER);
-        validationBesoinAchat.dontSave("idValidationBonDeCommande");
-        validationBesoinAchat.save();
+    public boolean hasEnoughProformas() {
+        GenericDAO<ProformaArticleBesoinAchat> proformaArticleBesoinAchatGenericDAO = new GenericDAO<>(ProformaArticleBesoinAchat.class);
+
+        int count = 0;
+        try {
+            Connection c = ConnectTo.postgreS();
+
+            ArrayList<ProformaArticleBesoinAchat> proformas = proformaArticleBesoinAchatGenericDAO.getFromDatabase(c);
+
+            ArrayList<ArticleBesoinAchat> articleBesoinAchats = getArticlesBesoinAchat();
+            for (ArticleBesoinAchat articleBesoinAchat : articleBesoinAchats) {
+                for (ProformaArticleBesoinAchat proforma : proformas) {
+                    if (proforma.getIdArticleBesoinAchat() == articleBesoinAchat.getIdArticleBesoinAchat()) count++;
+                }
+            }
+
+            c.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return count >= 3;
+    }
+
+    @Override
+    public boolean valider(Utilisateur user) throws Exception {
+        if (!hasEnoughProformas()) throw new Exception("Minimum de 3 proformas pour chaque article");
+
+        ValidationBesoinAchatConfiguration validationBesoinAchatConfiguration = new ValidationBesoinAchatConfiguration();
+        if (!validationBesoinAchatConfiguration.isUserAllowed(user)) throw new Exception("Profil utilsateur invalide");
 
         // TODO: Checker si l'utilisateur possede le profil necessaire
-        return updateStatusBesoin(DemandeConfiguration.VALIDER, null);
+        int validation = validationBesoinAchatConfiguration.canValidate(user, statusBesoin);
+        if (validation != -1) {
+            ValidationBesoinAchat validationBesoinAchat = new ValidationBesoinAchat();
+            validationBesoinAchat.setDateValidation(new Timestamp(System.currentTimeMillis()));
+            validationBesoinAchat.setCommentaire("");
+            validationBesoinAchat.setIdUtilisateur(user.idUtilisateur);
+            validationBesoinAchat.setIdBesoinAchat(idBesoinAchat);
+            validationBesoinAchat.setStatusValidation(DemandeConfiguration.VALIDER);
+            validationBesoinAchat.dontSave("idValidationBesoinAchat");
+            validationBesoinAchat.save();
+
+
+            return updateStatusBesoin(validation, null);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean getIsValidationComplete() {
+        return new ValidationBesoinAchatConfiguration().isAtLastState(statusBesoin);
+    }
+
+    @Override
+    public Integer[] getCanBeValidated() {
+        return new ValidationBesoinAchatConfiguration().getAllowedProfiles();
     }
 
     public boolean updateStatusBesoin(int status, Timestamp now) {
@@ -284,5 +330,23 @@ public class BesoinAchat extends BDD {
         }
 
         return bonDeCommandes;
+    }
+
+    public boolean getGeneratedBonDeCommande() {
+        GenericDAO<BonDeCommande> bonDeCommandeGenericDAO = new GenericDAO<>(BonDeCommande.class);
+
+        ArrayList<BonDeCommande> bonDeCommandes = new ArrayList<>();
+        try {
+            Connection c = ConnectTo.postgreS();
+
+            bonDeCommandeGenericDAO.addToSelection("idBesoinAchat", idBesoinAchat, "");
+            bonDeCommandes = bonDeCommandeGenericDAO.getFromDatabase(c);
+
+            c.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return !bonDeCommandes.isEmpty();
     }
 }

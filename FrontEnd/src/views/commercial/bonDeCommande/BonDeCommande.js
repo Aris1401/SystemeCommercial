@@ -94,22 +94,22 @@ const BonDeCommande = () => {
 											</CTableDataCell>
 
 											<CTableDataCell>
-												<div className='d-flex gap-2 flex-column'>
+												<div className='d-flex gap-1 m-0 flex-column'>
 													{ bonDeCommande.articleBonDeCommandes.map(( articleBonDeCommande, index ) => {
 														return index < 3 ? (
-															<p className='badge text-bg-primary text-wrap' key={ articleBonDeCommande.article.nom }>{ articleBonDeCommande.article.nom }</p>
+															<p className='badge text-bg-primary m-0 text-wrap' key={ articleBonDeCommande.article.nom }>{ articleBonDeCommande.article.nom }</p>
 														) : null
 													}) }
 												</div>
 											</CTableDataCell>
 
-											<CTableDataCell>
+											<CTableDataCell style={{ verticalAlign: 'middle' }}>
 												<p className='badge text-bg-info text-wrap'>
 													{ bonDeCommande.statusString }
 												</p>
 											</CTableDataCell>
 
-											<CTableDataCell>
+											<CTableDataCell style={{ verticalAlign: 'middle' }}>
 												<CNavLink to={`/detailsbondecommande/${ bonDeCommande.idBonDeCommande }`} component={NavLink}>
 													<CButton style={{ fontSize: '.8rem' }}>Plus <CIcon icon={cilArrowRight}></CIcon></CButton>
 												</CNavLink>

@@ -36,15 +36,20 @@ const ListeOpenBesoinsAchat = () => {
     useEffect(() => {
         openBesoinsAchat.forEach((besoinAchat) => {
             besoinAchat.articlesBesoinAchat.forEach((articleBesoinAchat) => {
-                if (besoinsEnNature[articleBesoinAchat.article.nom]) {
-                    setBesoinsEnNature(prev => prev[articleBesoinAchat.article.nom].qte += articleBesoinAchat.quantite)
+                if (besoinsEnNature[articleBesoinAchat.article.idArticle]) {
+                    setBesoinsEnNature(prev => {
+                        if (prev) {
+                            prev[articleBesoinAchat.article.idArticle].qte += articleBesoinAchat.quantite
+                        }
+                    })
                 } else {
-                    besoinsEnNature[articleBesoinAchat.article.nom] = {
-                        qte: articleBesoinAchat.quantite,
-                        unite: articleBesoinAchat.unite.nom,
-                    }
+                        setBesoinsEnNature(prev => ({...prev, [articleBesoinAchat.article.idArticle] : {
+                            nom: articleBesoinAchat.article.nom,
+                            qte: articleBesoinAchat.quantite,
+                            unite: articleBesoinAchat.unite.nom,
+                        }}));
                 }
-                setBesoinsEnNatureKeys(prev => [...prev, articleBesoinAchat.article.nom])
+                setBesoinsEnNatureKeys(prev => [...prev, articleBesoinAchat.article.idArticle])
             })
         })
     }, [openBesoinsAchat])
@@ -100,17 +105,17 @@ const ListeOpenBesoinsAchat = () => {
 
                     <CTableBody>
                         { besoinsEnNatureKeys.map((key, index) => {
-                            return (
+                            return besoinsEnNature && besoinsEnNature[key] ? (
                                 <CTableRow key={key} >
                                     <CTableDataCell>
-                                        <p className='badge text-bg-primary text-wrap'>{ key }</p>
+                                        <p className='badge text-bg-primary text-wrap'>{ `${besoinsEnNature[key] && besoinsEnNature[key].nom}` }</p>
                                     </CTableDataCell>
 
                                     <CTableDataCell>
                                         <p className='text-medium-emphasis'>{ `${besoinsEnNature[key] && besoinsEnNature[key].qte} ${besoinsEnNature[key] && besoinsEnNature[key].unite}` }</p>
                                     </CTableDataCell>
                                 </CTableRow>
-                            )
+                            ) : null
                         }) }
                     </CTableBody>
                 </CTable>

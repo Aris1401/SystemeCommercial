@@ -5,12 +5,19 @@
  */
 package com.commercial.gestion.model;
 
+import com.commercial.gestion.aris.bdd.annotations.PrimaryKey;
+import com.commercial.gestion.aris.bdd.generic.GenericDAO;
+import com.commercial.gestion.dbAccess.ConnectTo;
+
+import java.sql.Connection;
+
 /**
  *
  * @author BEST
  */
 public class Profil
 {
+    @PrimaryKey
     int idProfil;
     String nom;
     int idService;
@@ -39,5 +46,20 @@ public class Profil
         this.idService = idService;
     }
 
-    
+    public static Profil obtenirProfilById(int idProfil) {
+        GenericDAO<Profil> profilGenericDAO = new GenericDAO<>(Profil.class);
+
+        Profil profil = null;
+        try {
+            Connection c = ConnectTo.postgreS();
+
+            profil = profilGenericDAO.getFromDatabaseById(c, idProfil);
+
+            c.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return profil;
+    }
 }
