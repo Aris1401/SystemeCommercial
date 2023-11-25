@@ -227,3 +227,66 @@ create table ConfigurationValues(
     designation varchar(255),
     valeur varchar(255)
 );
+
+-- Cote fournisseur
+create table DemandeProformaCoteFournisseur(
+    idDemandeProformaCoteFournisseur SERIAL PRIMARY KEY,
+    dateDemande TIMESTAMP,
+    idArticle INT,
+    idUnite INT,
+    quantite DECIMAL(18, 5),
+    idFournisseur INT,
+    lienEmail TEXT
+);
+
+create table ProformaCoteFournisseur(
+    idProformaCoteFournisseur SERIAL PRIMARY KEY,
+    idDemandeProformaCoteFournisseur INT REFERENCES DemandeProformaCoteFournisseur(idDemandeProformaCoteFournisseur)
+    quantite DECIMAL(18, 5),
+    prixUnitaire DECIMAL(18, 5)
+);
+
+create table ValidationDemandeProformaCoteFournisseur(
+    idValidationDemandeProformaCoteFournisseur SERIAL PRIMARY KEY,
+    dateValidation TIMESTAMP,
+    idDemandeProformaCoteFournisseur INT REFERENCES DemandeProformaCoteFournisseur(idDemandeProformaCoteFournisseur)
+);
+
+-- Cote antsika
+create table DemandeRecuProforma(
+    idDemandeRecuProforma SERIAL PRIMARY KEY,
+    idFournisseurFrom INT,
+    lienEmail TEXT,
+    quantite DECIMAL(18, 5),
+    idArticle INT REFERENCES Article(idArticle),
+    idUnite INT REFERENCES Unite(idUnite),
+    dateDemande TIMESTAMP,
+    etat INT
+);
+
+create table ReponseDemandeRecuProforma (
+    idReponseDemandeRecuProforma SERIAL PRIMARY KEY,
+    dateReponse TIMESTAMP,
+    lienEmail TEXT,
+    quantite DECIMAL(18, 5),
+    prixUnitaire DECIMAL(18, 5),
+    idDemandeRecuProforma INT REFERENCES DemandeRecuProforma(idDemandeRecuProforma)
+);
+
+-- Stock
+create table MouvementStock (
+    idMouvementStock SERIAL PRIMARY KEY,
+    entree DECIMAL DEFAULT 0,
+    sortie DECIMAL DEFAULT 0,
+    dateMouvement TIMESTAMP,
+    idArticle INT REFERENCES Article(idArticle),
+    idUnite INT REFERENCES Unite(idUnite),
+    prixUnitaire DECIMAL DEFAULT 0
+);
+
+create table UniteEquivalence (
+    idUniteEquivalence SERIAL PRIMARY KEY,
+    idUnite INT REFERENCES Unite(idUnite),
+    idArticle INT REFERENCES Article(idArticle),
+    quantite DECIMAL DEFAULT 0
+);
