@@ -7,6 +7,7 @@ import CIcon from '@coreui/icons-react';
 import { cilPlus } from '@coreui/icons';
 import { NavLink } from 'react-router-dom';
 import DemandeAjoutArticle from '../demandeAjoutArticle/DemandeAjoutArticle';
+import { CheckAuth } from 'src/Authenfication';
 
 const getValidBesoinsAchat = () => {
     return [];
@@ -96,7 +97,7 @@ const BesoinAchat = () => {
             values: besoin,
             requestType: 'POST',
             successCallback: (data) => {
-                Promise.all(selectionsArticles.forEach((article) => {
+                Promise.all(selectionsArticles.map((article) => {
                     let selectionArticle = article.ref.current.getSelectedValues()
 
                     let articleBesoinAchat = {

@@ -1,9 +1,10 @@
 import { CButton, CCard, CCardBody, CCardTitle, CCol, CRow, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useReducer, useRef, useState } from 'react'
 import { getArticles } from '../besoinAchat/components/SelectionArticle'
 import CIcon from '@coreui/icons-react'
 import { cilPen, cilTrash } from '@coreui/icons'
 import { makeRequest } from 'src/Api'
+import DemandeAjoutArticle from '../demandeAjoutArticle/DemandeAjoutArticle'
 
 export const allDemandesArticles = () => {
   return new Promise((resolve, reject) => {
@@ -54,12 +55,20 @@ const Articles = () => {
     })
   }, [update])
 
+  // Demande ajout article
+  const demandeAjoutArticleRef = useRef()
+
   return (
     <CCard>
+      <DemandeAjoutArticle ref={demandeAjoutArticleRef} />
       <CCardBody>
         <CCardTitle>
           <h3>Articles</h3>
-          <CButton>Ajouter article</CButton>
+          <CButton 
+            onClick={(e) => {
+              demandeAjoutArticleRef.current.showModal()
+            }}
+          >Ajouter article</CButton>
         </CCardTitle>
 
         <CRow className='mt-5'>

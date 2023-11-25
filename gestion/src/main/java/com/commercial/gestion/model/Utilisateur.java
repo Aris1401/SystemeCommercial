@@ -7,13 +7,15 @@ package com.commercial.gestion.model;
 
 
 import com.commercial.gestion.BDDIante.BDD;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author BEST
  */
-public class Utilisateur extends BDD
+public class Utilisateur extends BDD implements Serializable
 {
     int idUtilisateur;
     String nom;
@@ -70,26 +72,51 @@ public class Utilisateur extends BDD
         this.idTypeUtilisateur = idTypeUtilisateur;
     }
 
-    public ArrayList<ProfilUtilisateur> getProfil() {
-        return null;
+    public ArrayList<ProfilUtilisateur> getProfilUtilisateur() {
+        Utilisateur user = Utilisateur.connect(email, motDePasse);
+
+        return ProfilUtilisateur.getProfilUtilisateur(user);
+    }
+
+    public ArrayList<Profil> getProfils() {
+        ArrayList<Profil> profils = new ArrayList<>();
+
+        ArrayList<ProfilUtilisateur> profilUtilisateurs = getProfilUtilisateur();
+        for (ProfilUtilisateur profilUtilisateur : profilUtilisateurs) {
+            profils.add(Profil.obtenirProfilById(profilUtilisateur.getIdProfil()));
+        }
+
+        return profils;
+    }
+
+    public boolean hasProfil(int idProfil) {
+        ArrayList<Profil> profils = getProfils();
+
+        for (Profil profil : profils) {
+            if (profil.getIdProfil() == idProfil) return true;
+        }
+
+        return false;
     }
 
     ////////////////////////////////////////////////////////////////////////
-    public Utilisateur connect(String email,String motDePasse)
+    public static Utilisateur connect(String email,String motDePasse)
     {
-        String condition=" WHERE email ="+email +" AND motDePasse="+motDePasse;
+        String condition=" WHERE email ='"+email +"' AND motDePasse= '"+motDePasse+"'";
         Utilisateur utilisateur =new Utilisateur();
+        Utilisateur returnedUtilisateur = null;
         ArrayList<String[]> allBDD=utilisateur.select(condition);
         for(int i=0;i< allBDD.size();i++)
         {
-            utilisateur.setIdUtilisateur(Integer.parseInt(allBDD.get(i)[0]));
-            utilisateur.setNom(allBDD.get(i)[1]);
-            utilisateur.setPrenom(allBDD.get(i)[2]);
-            utilisateur.setEmail(allBDD.get(i)[3]);
-            utilisateur.setMotDePasse(allBDD.get(i)[4]);
-            utilisateur.setIdTypeUtilisateur(Integer.parseInt(allBDD.get(i)[5]));
+            if (returnedUtilisateur == null) returnedUtilisateur = new Utilisateur();
+            returnedUtilisateur.setIdUtilisateur(Integer.parseInt(allBDD.get(i)[0]));
+            returnedUtilisateur.setNom(allBDD.get(i)[1]);
+            returnedUtilisateur.setPrenom(allBDD.get(i)[2]);
+            returnedUtilisateur.setEmail(allBDD.get(i)[3]);
+            returnedUtilisateur.setMotDePasse(allBDD.get(i)[4]);
+            returnedUtilisateur.setIdTypeUtilisateur(Integer.parseInt(allBDD.get(i)[5]));
         }
-    return utilisateur;
+    return returnedUtilisateur;
     }
-    ///////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
 }

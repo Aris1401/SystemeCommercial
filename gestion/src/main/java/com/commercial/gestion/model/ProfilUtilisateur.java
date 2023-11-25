@@ -55,7 +55,7 @@ public class ProfilUtilisateur extends BDD
         this.dateAjout = dateAjout;
     }
     /////////////////////////////////////////////////////////////////////////////
-    public ArrayList<ProfilUtilisateur> allProfilUser()
+    public static ArrayList<ProfilUtilisateur> allProfilUser()
     {
         ProfilUtilisateur pp=new ProfilUtilisateur();
         ArrayList<String[]>allBDD=pp.select();
@@ -73,7 +73,7 @@ public class ProfilUtilisateur extends BDD
         return all;
     }
     ////////////////////////////////////////////////////////////////////////////
-    public ArrayList<ProfilUtilisateur> getProfil(Utilisateur user)
+    public static ArrayList<ProfilUtilisateur> getProfilUtilisateur(Utilisateur user)
     {
        ProfilUtilisateur p=new ProfilUtilisateur();
        ArrayList<ProfilUtilisateur>all= allProfilUser();
@@ -91,6 +91,5 @@ public class ProfilUtilisateur extends BDD
         }
        return pp;
     }
-    ////////////////////////////////////////////////////////////////////////////
-    
+    ///////////////////////////////////////////////////////////////////////////
 }

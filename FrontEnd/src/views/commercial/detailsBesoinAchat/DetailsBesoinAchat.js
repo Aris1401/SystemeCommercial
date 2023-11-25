@@ -5,6 +5,22 @@ import React, { useEffect, useRef, useState } from 'react'
 import { NavLink, useParams } from 'react-router-dom'
 import { makeRequest } from 'src/Api';
 import DemandeProformaBesoin from '../demandeProforma/DemandeProforma';
+import { CheckAuth, HasProfil } from 'src/Authenfication';
+
+export const validerBesoinAchat = (idBesoinAchat) => {
+    return new Promise((resolve, reject) => {
+        makeRequest({
+            url: `besoinsachat/${idBesoinAchat}/valider`,
+            requestType: 'GET',
+            successCallback: (data) => {
+                resolve(data)
+            },
+            failureCallback: (error) => {
+                reject(error)
+            }
+        })
+    })
+} 
 
 export const getDetailsBesoinAchat = (idBesoinAchat) => {
     return new Promise((resolve, reject) => {
@@ -40,13 +56,16 @@ const DetailsBesoinAchat = () => {
     // Getting the id param
     const { idBesoinAchat } = useParams();
 
+    // Update
+    const [ update, setUpdate ] = useState(false)
+
     // Details besoin achat
     const [besoinAchat, setBesoinAchat] = useState()
     useEffect(() => {
         getDetailsBesoinAchat(idBesoinAchat).then((data) => {
             setBesoinAchat(data)
         })
-    }, [])
+    }, [update])
 
     // Selected article
     const [selectedArticleBesoin, setSelectedArticleBesoin] = useState(-1)
@@ -67,6 +86,27 @@ const DetailsBesoinAchat = () => {
             })
         }
     } 
+
+    // Utilisateur
+    const [ user, setUser ] = useState()
+
+    useEffect(() => {
+        CheckAuth().then((user) => {
+            setUser(user)
+        })
+    }, [])
+
+    // Validation besoin achat
+    const handleValidationBesoinAchat = (e) => {
+        validerBesoinAchat(besoinAchat.idBesoinAchat).then((data) => {
+            if (data.errorMessage) {
+                setErrorMessage(data.errorMessage)
+                setDisplayError(true)
+            } else {
+                setUpdate(true)
+            }
+        })
+    }
 
     return (
         <CCard className='p-2'>
@@ -135,8 +175,8 @@ const DetailsBesoinAchat = () => {
                 <CRow className='text-end mt-3'>
                     <CCol className='d-flex flex-column justify-content-end align-items-end gap-2'>
                         <p className='text-medium-emphasis fw-bold mb-0' style={{ fontSize: '.9rem' }}>Estimation montant total: { besoinAchat && besoinAchat.estimationMontantTotal } Ar</p>
-                        <CButton style={{ fontSize: '.9rem' }} disabled>Valider besoin</CButton>
-                        <CButton style={{ fontSize: '.9rem' }} className='btn-success text-white' onClick={handleGenerationBonDeCommande}>Generer bons de commandes</CButton>
+                        { besoinAchat && (!besoinAchat.isValidationComplete && (HasProfil(user, besoinAchat.canBeValidated) && <CButton style={{ fontSize: '.9rem' }} onClick={handleValidationBesoinAchat} >Valider besoin</CButton>)) }
+                        { besoinAchat && (besoinAchat.isValidationComplete && (!besoinAchat.generatedBonDeCommande && <CButton style={{ fontSize: '.9rem' }} className='btn-success text-white' onClick={handleGenerationBonDeCommande}>Generer bons de commandes</CButton>)) }
                     </CCol>
                 </CRow>
             </CCardBody>

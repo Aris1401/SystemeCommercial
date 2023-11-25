@@ -1,18 +1,17 @@
 package com.commercial.gestion.controller;
 
-import com.commercial.gestion.aris.bdd.generic.GenericDAO;
-import com.commercial.gestion.dbAccess.ConnectTo;
 import com.commercial.gestion.model.BonDeCommande;
 import com.commercial.gestion.model.ModeDePaiement;
+import com.commercial.gestion.model.Utilisateur;
 import com.commercial.gestion.repository.ModeDePaiementRepository;
+import com.commercial.gestion.response.ValidationBonDeCommandeResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Connection;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 @RestController
 public class BonDeCommandeController {
@@ -31,6 +30,22 @@ public class BonDeCommandeController {
     @GetMapping("/bondecommandes/{idBonDeCommande}")
     public BonDeCommande obtenirBonDeCommande(@PathVariable("idBonDeCommande") int idBonDeCommande) {
         return BonDeCommande.obtenirBonDeCommandeAvec(idBonDeCommande);
+    }
+
+    @GetMapping("/bondecommandes/{idBonDeCommande}/valider")
+    public ValidationBonDeCommandeResponse validerBonDeCommande(@PathVariable("idBonDeCommande") int idBonDeCommande, HttpSession session) {
+        Utilisateur user = (Utilisateur) session.getAttribute("user");
+        BonDeCommande bonDeCommande = BonDeCommande.obtenirBonDeCommandeAvec(idBonDeCommande);
+
+        ValidationBonDeCommandeResponse response = new ValidationBonDeCommandeResponse();
+        response.addToData(bonDeCommande);
+        try {
+            bonDeCommande.valider(user);
+        } catch (Exception e) {
+            response.setErrorMessage(e.getMessage());
+        }
+
+        return response;
     }
 
     @GetMapping("/modesdepaiement")

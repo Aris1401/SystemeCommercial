@@ -8,12 +8,10 @@ public class DemandeConfiguration {
     public static final int CLOT = 30;
 
     public static String getStatusString(int status) {
-        return switch (status) {
-            case EN_COURS -> "En cours";
-            case VALIDER -> "Valider";
-            case REFUSER -> "Refusee";
-            case CLOT -> "Clot";
-            default -> "";
-        };
+        if (status >= EN_COURS && status < VALIDER) return "En cours";
+        else if (status >= VALIDER && status < REFUSER) return "Valider";
+        else if (status >= REFUSER && status < CLOT) return "Refuser";
+        else if (status >= CLOT) return "Cloture";
+        else return "Aucun etat";
     }
 }

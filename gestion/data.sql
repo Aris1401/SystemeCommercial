@@ -79,3 +79,37 @@ INSERT INTO ConfigurationValues (designation, valeur) VALUES ('TVA', '20');
 INSERT INTO ConfigurationValues (designation, valeur) VALUES ('N_BonDeCommande_Format', '000000');
 
 INSERT INTO ModeDePaiement(nom) VALUES ('Carte Bancaire'), ('Cheque'), ('Espece');
+
+    -- Insérer deux types d'utilisateurs
+    INSERT INTO TypeUtilisateur (nom)
+    VALUES
+      ('Lambda'),
+      ('Personnel');
+
+    -- Insérer des profils avec idService à NULL
+    INSERT INTO Profil (nom, idService)
+    VALUES
+      ('Service Achat', NULL),
+      ('Direction Approvisionnement', NULL),
+      ('Ressources Humaines', NULL),
+      ('Finances', NULL),
+      ('Direction Générale', NULL),
+      ('Chef de Département', NULL);
+
+    -- Insérer des utilisateurs associés à chaque profil
+    INSERT INTO Utilisateur (nom, prenom, email, motDePasse, idTypeUtilisateur)
+    VALUES
+      ('AcheteurA', 'Acheteur', 'acheteura@example.com', 'motDePasseHashé', 1),
+      ('ApprovisionneurA', 'Approvisionneur', 'approvisionneura@example.com', 'motDePasseHashé', 1),
+      ('RHA', 'RH', 'rha@example.com', 'motDePasseHashé', 1),
+      ('FinanceurA', 'Financeur', 'financeura@example.com', 'motDePasseHashé', 1),
+      ('DirecteurA', 'Directeur', 'directeura@example.com', 'motDePasseHashé', 1),
+      ('ChefDepartementA', 'Chef', 'chefa@example.com', 'motDePasseHashé', 1);
+
+
+    INSERT INTO ProfilUtilisateur (idUtilisateur, idProfil, dateAjout) VALUES (1, 1, CURRENT_TIMESTAMP);
+    INSERT INTO ProfilUtilisateur (idUtilisateur, idProfil, dateAjout) VALUES (2, 2, CURRENT_TIMESTAMP);
+    INSERT INTO ProfilUtilisateur (idUtilisateur, idProfil, dateAjout) VALUES (3, 3, CURRENT_TIMESTAMP);
+    INSERT INTO ProfilUtilisateur (idUtilisateur, idProfil, dateAjout) VALUES (4, 4, CURRENT_TIMESTAMP);
+    INSERT INTO ProfilUtilisateur (idUtilisateur, idProfil, dateAjout) VALUES (5, 5, CURRENT_TIMESTAMP);
+    INSERT INTO ProfilUtilisateur (idUtilisateur, idProfil, dateAjout) VALUES (6, 6, CURRENT_TIMESTAMP);

@@ -4,6 +4,8 @@ import DetailsBesoinAchat from './views/commercial/detailsBesoinAchat/DetailsBes
 import BonDeCommande from './views/commercial/bonDeCommande/BonDeCommande'
 import DetailsBonDeCommande from './views/commercial/detailsBonDeCommande/DetailsBonDeCommande'
 import Articles from './views/commercial/articles/Articles'
+import Service from './views/commercial/services/Service'
+import Fournisseurs from './views/commercial/fournisseur/Fournisseurs'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
@@ -105,6 +107,8 @@ const routes = [
   { path: '/bondecommandes', name: 'Bon de commande', element: BonDeCommande },
   { path: '/detailsbondecommande/:idBonDeCommande', name: 'Details bon de commande', element: DetailsBonDeCommande },
   { path: '/articles', name: 'Articles', element: Articles },
+  { path: '/services', name: 'Services', element: Service},
+  { path: '/fournisseurs', name: 'Fournisseurs', element: Fournisseurs}
 ]
 
 export default routes

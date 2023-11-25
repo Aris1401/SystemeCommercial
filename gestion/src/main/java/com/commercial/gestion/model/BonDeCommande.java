@@ -9,6 +9,8 @@ import com.commercial.gestion.BDDIante.BDD;
 import com.commercial.gestion.BDDIante.annotations.NotInTable;
 import com.commercial.gestion.aris.bdd.generic.GenericDAO;
 import com.commercial.gestion.configuration.DemandeConfiguration;
+import com.commercial.gestion.validation.IValidable;
+import com.commercial.gestion.validation.ValidationBonDeCommandeConfiguration;
 import com.commercial.gestion.dbAccess.ConnectTo;
 import com.commercial.gestion.genericModels.GenericBonDeCommande;
 import com.commercial.gestion.utility.Utility;
@@ -17,11 +19,9 @@ import java.sql.*;
 import java.util.ArrayList;
 
 /**
- *
  * @author BEST
  */
-public class BonDeCommande extends BDD
-{
+public class BonDeCommande extends BDD implements IValidable {
     int idBonDeCommande;
     String titre;
     Timestamp dateCreation;
@@ -50,7 +50,9 @@ public class BonDeCommande extends BDD
         this.articleBonDeCommandes = new ArrayList<>();  // Initialize the list if needed
     }
 
-    public BonDeCommande() {}
+    public BonDeCommande() {
+    }
+
     public int getIdBonDeCommande() {
         return idBonDeCommande;
     }
@@ -192,59 +194,35 @@ public class BonDeCommande extends BDD
     public Fournisseur getFournisseur() {
         return Fournisseur.getFournisseurById(idFournisseur);
     }
+
     ////////////////////////////////////////////////////////////////////
- public boolean insertBonDeCommande(String titre,String dateDeCreation,String idFournisseur,
-                                    String idBesoinAchat,String dateLivraison,String idModeDePaiement,
-                                    String conditionDePaiement,String montantTotal,String status)
- {
-     boolean insert=false;
-    BonDeCommande bonDeCommande=new BonDeCommande();
-     bonDeCommande.setTitre(titre);
-     bonDeCommande.setDateCreation(Timestamp.valueOf(dateDeCreation));
-     bonDeCommande.setIdFournisseur(Integer.parseInt(idFournisseur));
-     bonDeCommande.setIdBesoinAchat(Integer.parseInt(idBesoinAchat));
-     bonDeCommande.setDateLivraison(Timestamp.valueOf(dateLivraison));
-     bonDeCommande.setIdModeDePaiement(Integer.parseInt(idModeDePaiement));
-     bonDeCommande.setConditionDePaiement(conditionDePaiement);
-     bonDeCommande.setMontantTotal(Double.parseDouble(montantTotal));
-     bonDeCommande.dontSave("idBonDeCommande");
-     bonDeCommande.setStatusBonDeCommande(Integer.parseInt(status));
-     bonDeCommande.save();
-     insert=true;
-     return insert;
- }
-////////////////////////////////////////////////////////////////////
-public ArrayList<BonDeCommande> allBonDeCommande()
-{
-    BonDeCommande b=new BonDeCommande();
-    ArrayList<String[]> allBonDeCommandeBDD=b.select();
-    ArrayList<BonDeCommande> allBonDeCommande=new ArrayList<BonDeCommande>();
-    for(int i=0;i<allBonDeCommandeBDD.size();i++)
-    {
-        BonDeCommande bonDeCommande=new BonDeCommande();
-        bonDeCommande.setIdBonDeCommande(Integer.parseInt(allBonDeCommandeBDD.get(i)[0]));
-        bonDeCommande.setDateCreation(Timestamp.valueOf(allBonDeCommandeBDD.get(i)[1]));
-        bonDeCommande.setIdFournisseur(Integer.parseInt(allBonDeCommandeBDD.get(i)[2]));
-        bonDeCommande.setIdBesoinAchat(Integer.parseInt(allBonDeCommandeBDD.get(i)[3]));
-        bonDeCommande.setDateLivraison(Timestamp.valueOf(allBonDeCommandeBDD.get(i)[4]));
-        bonDeCommande.setIdModeDePaiement(Integer.parseInt(allBonDeCommandeBDD.get(i)[5]));
-        bonDeCommande.setConditionDePaiement(allBonDeCommandeBDD.get(i)[6]);
-        bonDeCommande.setMontantTotal(Double.parseDouble(allBonDeCommandeBDD.get(i)[7]));
-        bonDeCommande.setStatusBonDeCommande(Integer.parseInt(allBonDeCommandeBDD.get(i)[8]));
-        allBonDeCommande.add(bonDeCommande);
+    public boolean insertBonDeCommande(String titre, String dateDeCreation, String idFournisseur,
+                                       String idBesoinAchat, String dateLivraison, String idModeDePaiement,
+                                       String conditionDePaiement, String montantTotal, String status) {
+        boolean insert = false;
+        BonDeCommande bonDeCommande = new BonDeCommande();
+        bonDeCommande.setTitre(titre);
+        bonDeCommande.setDateCreation(Timestamp.valueOf(dateDeCreation));
+        bonDeCommande.setIdFournisseur(Integer.parseInt(idFournisseur));
+        bonDeCommande.setIdBesoinAchat(Integer.parseInt(idBesoinAchat));
+        bonDeCommande.setDateLivraison(Timestamp.valueOf(dateLivraison));
+        bonDeCommande.setIdModeDePaiement(Integer.parseInt(idModeDePaiement));
+        bonDeCommande.setConditionDePaiement(conditionDePaiement);
+        bonDeCommande.setMontantTotal(Double.parseDouble(montantTotal));
+        bonDeCommande.dontSave("idBonDeCommande");
+        bonDeCommande.setStatusBonDeCommande(Integer.parseInt(status));
+        bonDeCommande.save();
+        insert = true;
+        return insert;
     }
-    return allBonDeCommande;
-}
-////////////////////////////////////////////////////////////////////
-    public ArrayList<BonDeCommande> obtenirBonDeCommandeForFournisseur(int idFournisseur)
-    {
-        BonDeCommande b=new BonDeCommande();
-        String condition="where idFournisseur ="+idFournisseur;
-        ArrayList<String[]> allBonDeCommandeBDD=b.select(condition);
-        ArrayList<BonDeCommande> allBonDeCommande=new ArrayList<BonDeCommande>();
-        for(int i=0;i<allBonDeCommandeBDD.size();i++)
-        {
-            BonDeCommande bonDeCommande=new BonDeCommande();
+
+    ////////////////////////////////////////////////////////////////////
+    public ArrayList<BonDeCommande> allBonDeCommande() {
+        BonDeCommande b = new BonDeCommande();
+        ArrayList<String[]> allBonDeCommandeBDD = b.select();
+        ArrayList<BonDeCommande> allBonDeCommande = new ArrayList<BonDeCommande>();
+        for (int i = 0; i < allBonDeCommandeBDD.size(); i++) {
+            BonDeCommande bonDeCommande = new BonDeCommande();
             bonDeCommande.setIdBonDeCommande(Integer.parseInt(allBonDeCommandeBDD.get(i)[0]));
             bonDeCommande.setDateCreation(Timestamp.valueOf(allBonDeCommandeBDD.get(i)[1]));
             bonDeCommande.setIdFournisseur(Integer.parseInt(allBonDeCommandeBDD.get(i)[2]));
@@ -258,62 +236,94 @@ public ArrayList<BonDeCommande> allBonDeCommande()
         }
         return allBonDeCommande;
     }
-////////////////////////////////////////////////////////////////////
-public ArrayList<BonDeCommande> obtenirBonDeCommandeValide()
-{
-    GenericDAO<BonDeCommande> bonDeCommandeGenericDAO = new GenericDAO<>(BonDeCommande.class);
 
-    ArrayList<BonDeCommande> bonDeCommandes = new ArrayList<>();
-    try {
+    ////////////////////////////////////////////////////////////////////
+    public ArrayList<BonDeCommande> obtenirBonDeCommandeForFournisseur(int idFournisseur) {
+        BonDeCommande b = new BonDeCommande();
+        String condition = "where idFournisseur =" + idFournisseur;
+        ArrayList<String[]> allBonDeCommandeBDD = b.select(condition);
+        ArrayList<BonDeCommande> allBonDeCommande = new ArrayList<BonDeCommande>();
+        for (int i = 0; i < allBonDeCommandeBDD.size(); i++) {
+            BonDeCommande bonDeCommande = new BonDeCommande();
+            bonDeCommande.setIdBonDeCommande(Integer.parseInt(allBonDeCommandeBDD.get(i)[0]));
+            bonDeCommande.setDateCreation(Timestamp.valueOf(allBonDeCommandeBDD.get(i)[1]));
+            bonDeCommande.setIdFournisseur(Integer.parseInt(allBonDeCommandeBDD.get(i)[2]));
+            bonDeCommande.setIdBesoinAchat(Integer.parseInt(allBonDeCommandeBDD.get(i)[3]));
+            bonDeCommande.setDateLivraison(Timestamp.valueOf(allBonDeCommandeBDD.get(i)[4]));
+            bonDeCommande.setIdModeDePaiement(Integer.parseInt(allBonDeCommandeBDD.get(i)[5]));
+            bonDeCommande.setConditionDePaiement(allBonDeCommandeBDD.get(i)[6]);
+            bonDeCommande.setMontantTotal(Double.parseDouble(allBonDeCommandeBDD.get(i)[7]));
+            bonDeCommande.setStatusBonDeCommande(Integer.parseInt(allBonDeCommandeBDD.get(i)[8]));
+            allBonDeCommande.add(bonDeCommande);
+        }
+        return allBonDeCommande;
+    }
+
+    ////////////////////////////////////////////////////////////////////
+    public ArrayList<BonDeCommande> obtenirBonDeCommandeValide() {
+        GenericDAO<BonDeCommande> bonDeCommandeGenericDAO = new GenericDAO<>(BonDeCommande.class);
+
+        ArrayList<BonDeCommande> bonDeCommandes = new ArrayList<>();
+        try {
+            Connection c = ConnectTo.postgreS();
+
+            bonDeCommandeGenericDAO.addToSelection("statusBonDeCommande", DemandeConfiguration.VALIDER, "");
+            bonDeCommandes = bonDeCommandeGenericDAO.getFromDatabase(c);
+
+            c.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return bonDeCommandes;
+    }
+
+    ////////////////////////////////////////////////////////////////////
+    public static ArrayList<BonDeCommande> obtenirBonDeCommandeNonValide() {
+        GenericDAO<BonDeCommande> bonDeCommandeGenericDAO = new GenericDAO<>(BonDeCommande.class);
+
+        ArrayList<BonDeCommande> bonDeCommandes = new ArrayList<>();
+        try {
+            Connection c = ConnectTo.postgreS();
+
+//            bonDeCommandeGenericDAO.addToSelection("statusBonDeCommande", DemandeConfiguration.EN_COURS, "");
+            bonDeCommandes = bonDeCommandeGenericDAO.getFromDatabase(c);
+
+            c.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return bonDeCommandes;
+    }
+
+    ////////////////////////////////////////////////////////////////////
+    public void validerBonDeCommande5(int idBonDeCommande, boolean ok) throws SQLException {
+        if (ok = true) {
+            BonDeCommande b = new BonDeCommande();
+            b.update5(idBonDeCommande);
+        }
+    }
+
+    //////////////////////////////////////////////////////////////////////
+    public void validerBonDeCommande10(int idBonDeCommande, boolean ok, boolean okok) throws SQLException {
+        if (ok == true && okok == true) {
+            BonDeCommande b = new BonDeCommande();
+            b.update10(idBonDeCommande);
+        }
+    }
+
+    public void updateBonDeCommande(int idBonDeCommande, int status) throws Exception {
         Connection c = ConnectTo.postgreS();
-
-        bonDeCommandeGenericDAO.addToSelection("statusBonDeCommande", DemandeConfiguration.VALIDER, "");
-        bonDeCommandes = bonDeCommandeGenericDAO.getFromDatabase(c);
-
+        String updateQuery = "UPDATE BonDeCommande SET statusBonDeCommande = " + status + " WHERE idBonDeCommande = ?";
+        try (PreparedStatement preparedStatement = c.prepareStatement(updateQuery)) {
+            preparedStatement.setInt(1, idBonDeCommande);
+            preparedStatement.executeUpdate();
+        }
         c.close();
-    } catch (Exception e) {
-        throw new RuntimeException(e);
     }
 
-    return bonDeCommandes;
-}
-////////////////////////////////////////////////////////////////////
-public static ArrayList<BonDeCommande> obtenirBonDeCommandeNonValide()
-{
-    GenericDAO<BonDeCommande> bonDeCommandeGenericDAO = new GenericDAO<>(BonDeCommande.class);
-
-    ArrayList<BonDeCommande> bonDeCommandes = new ArrayList<>();
-    try {
-        Connection c = ConnectTo.postgreS();
-
-        bonDeCommandeGenericDAO.addToSelection("statusBonDeCommande", DemandeConfiguration.EN_COURS, "");
-        bonDeCommandes = bonDeCommandeGenericDAO.getFromDatabase(c);
-
-        c.close();
-    } catch (Exception e) {
-        throw new RuntimeException(e);
-    }
-
-    return bonDeCommandes;
-}
-////////////////////////////////////////////////////////////////////
-public void validerBonDeCommande5(int idBonDeCommande,boolean ok) throws SQLException {
-   if (ok=true)
-   {
-      BonDeCommande b=new BonDeCommande();
-      b.update5(idBonDeCommande);
-   }
-}
-
-//////////////////////////////////////////////////////////////////////
-public void validerBonDeCommande10(int idBonDeCommande,boolean ok,boolean okok) throws SQLException {
-    if (ok==true && okok==true)
-    {
-        BonDeCommande b=new BonDeCommande();
-        b.update10(idBonDeCommande);
-    }
-}
-//////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
     public static BonDeCommande createBonDeCommande(int idFournisseur, int idBesoinAchat, ArrayList<ArticleBesoinAchat> articleBesoinAchats) {
         GenericBonDeCommande genericBonDeCommande = new GenericBonDeCommande();
         genericBonDeCommande.setIdFournisseur(idFournisseur);
@@ -447,5 +457,38 @@ public void validerBonDeCommande10(int idBonDeCommande,boolean ok,boolean okok) 
     public ModeDePaiement getModeDePaiement() {
         if (idModeDePaiement == 0) return null;
         return ModeDePaiement.obtenirParId(idModeDePaiement);
+    }
+
+    @Override
+    public Integer[] getCanBeValidated() {
+        return new ValidationBonDeCommandeConfiguration().getCurrentAllowedProfile(statusBonDeCommande);
+    }
+
+    @Override
+    public boolean valider(Utilisateur user) throws Exception {
+        ValidationBonDeCommandeConfiguration validationBonDeCommandeConfiguration = new ValidationBonDeCommandeConfiguration();
+        if (user.hasProfil(validationBonDeCommandeConfiguration.getAllowedProfiles()[1])) if (idModeDePaiement == 0 || conditionDePaiement == null || dateLivraison == null) throw new Exception("Informations incompletes: Mode de paiment, Conditions de paiement, Date livraison");
+
+        if (!validationBonDeCommandeConfiguration.isUserAllowed(user)) throw new Exception("Validation impossible");
+
+        int validation = validationBonDeCommandeConfiguration.canValidate(user, statusBonDeCommande);
+        if (validation != -1) {
+            ValidationBonDeCommande validationBonDeCommande = new ValidationBonDeCommande();
+            validationBonDeCommande.setDateValidation(new Timestamp(System.currentTimeMillis()));
+            validationBonDeCommande.setStatusValidation(validation);
+            validationBonDeCommande.setCommentaire("");
+            validationBonDeCommande.setIdUtilisateur(user.getIdUtilisateur());
+            validationBonDeCommande.dontSave("idValidationBonDeCommande");
+            validationBonDeCommande.save();
+
+            updateBonDeCommande(idBonDeCommande, validation);
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean getIsValidationComplete() {
+        return new ValidationBonDeCommandeConfiguration().isAtLastState(statusBonDeCommande);
     }
 }

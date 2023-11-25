@@ -2,6 +2,8 @@ import { CButton, CCol, CModal, CModalBody, CModalFooter, CModalHeader, CModalTi
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { makeRequest } from 'src/Api';
 import AjoutProforma from '../ajoutProforma/AjoutProforma';
+import CIcon from '@coreui/icons-react';
+import { cilCart, cilXCircle } from '@coreui/icons';
 
 export const getFournisseurs = () => {
     return new Promise((resolve, reject) => {
@@ -230,6 +232,7 @@ const DemandeProformaBesoin = forwardRef((props, ref) => {
                             <CTable>
                                 <CTableHead>
                                     <CTableRow>
+                                        <CTableHeaderCell scope='col'></CTableHeaderCell>
                                         <CTableHeaderCell scope='col'>Fournisseur</CTableHeaderCell>
                                         <CTableHeaderCell scope='col'>Date Obtention</CTableHeaderCell>
                                         <CTableHeaderCell scope='col'>Prix Unitaire</CTableHeaderCell>
@@ -242,6 +245,9 @@ const DemandeProformaBesoin = forwardRef((props, ref) => {
                                     {proformas.map((proforma, index) => {
                                         return (
                                             <CTableRow key={proforma.dateObtention}>
+                                                <CTableDataCell>
+                                                    { index === 0 ? <CIcon icon={cilCart}></CIcon> : <CIcon icon={cilXCircle}></CIcon>}
+                                                </CTableDataCell>
                                                 <CTableDataCell>
                                                     <p className='fw-bold' style={{ fontSize: '.8rem' }}>{proforma.fournisseur.nom}</p>
                                                 </CTableDataCell>
