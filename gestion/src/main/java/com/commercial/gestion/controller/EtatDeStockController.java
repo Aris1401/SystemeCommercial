@@ -5,10 +5,7 @@ import com.commercial.gestion.model.stock.MouvementStock;
 import com.commercial.gestion.model.stock.dto.EntreeDTO;
 import com.commercial.gestion.model.stock.dto.SortieDTO;
 import com.commercial.gestion.response.Response;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class EtatDeStockController {
@@ -16,6 +13,27 @@ public class EtatDeStockController {
     public Response<EtatDeStock> getEtatDeStock() {
         Response<EtatDeStock> etatDeStockResponse = new Response<>();
         etatDeStockResponse.addToData(EtatDeStock.obtenirEtatStock(-1));
+        return etatDeStockResponse;
+    }
+
+    @GetMapping("/etatdestock/article/{article}")
+    public Response<EtatDeStock> getEtatDeStockArticle(@PathVariable("article") int article) {
+        Response<EtatDeStock> etatDeStockResponse = new Response<>();
+        etatDeStockResponse.addToData(EtatDeStock.obtenirEtatStock(-1));
+        return etatDeStockResponse;
+    }
+
+    @GetMapping("/etatdestock/unite/{unite}")
+    public Response<EtatDeStock> getEtatDeStockUnite(@PathVariable("unite") int unite) {
+        Response<EtatDeStock> etatDeStockResponse = new Response<>();
+        etatDeStockResponse.addToData(EtatDeStock.obtenirEtatStock(unite));
+        return etatDeStockResponse;
+    }
+
+    @GetMapping("/etatdestock/article/{article}/unite/{unite}")
+    public Response<EtatDeStock> getEtatDeStock(@PathVariable("article") int article, @PathVariable("unite") int unite) {
+        Response<EtatDeStock> etatDeStockResponse = new Response<>();
+        etatDeStockResponse.addToData(EtatDeStock.obtenirEtatStockArticle(article, unite));
         return etatDeStockResponse;
     }
 

@@ -7,6 +7,7 @@ import {
   cilCursor,
   cilDescription,
   cilDrop,
+  cilInbox,
   cilNotes,
   cilPencil,
   cilPuzzle,
@@ -354,6 +355,18 @@ const _nav = [
         component: CNavItem,
         name: 'Sortie stock',
         to: '/sortiestock'
+      }
+    ]
+  },
+  {
+    component: CNavGroup,
+    name: 'Boite',
+    icon: <CIcon icon={cilInbox} className='nav-icon' />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Demandes de proformas',
+        to: '/inbox/proformas'
       }
     ]
   }

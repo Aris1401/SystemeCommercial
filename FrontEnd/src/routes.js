@@ -9,6 +9,7 @@ import Fournisseurs from './views/commercial/fournisseur/Fournisseurs'
 import EtatDeStock from './views/commercial/stock/EtatDeStock/EtatDeStock'
 import AjoutStock from './views/commercial/stock/AjoutStock/AjoutStock'
 import SortieStock from './views/commercial/stock/SortieStock/SortieStock'
+import DemandesProformaRecu from './views/commercial/inbox/DemandeProformaRecu/DemandesProformaRecu'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
@@ -115,6 +116,7 @@ const routes = [
   { path: '/etatstock', name: 'Etat de stock', element: EtatDeStock },
   { path: '/ajoutstock', name: 'Ajout stock', element: AjoutStock },
   { path: '/sortiestock', name: 'Sortie stock', element: SortieStock },
+  { path: '/inbox/proformas', name: 'Demandes proforma', element: DemandesProformaRecu }
 ]
 
 export default routes
