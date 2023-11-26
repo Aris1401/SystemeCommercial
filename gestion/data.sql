@@ -113,3 +113,9 @@ INSERT INTO ModeDePaiement(nom) VALUES ('Carte Bancaire'), ('Cheque'), ('Espece'
     INSERT INTO ProfilUtilisateur (idUtilisateur, idProfil, dateAjout) VALUES (4, 4, CURRENT_TIMESTAMP);
     INSERT INTO ProfilUtilisateur (idUtilisateur, idProfil, dateAjout) VALUES (5, 5, CURRENT_TIMESTAMP);
     INSERT INTO ProfilUtilisateur (idUtilisateur, idProfil, dateAjout) VALUES (6, 6, CURRENT_TIMESTAMP);
+
+--- Stock
+insert into unite(nom) values ('Paquet');
+insert into uniteequivalence(idArticle, idUnite, quantite) values (13, 1, 1), (13, 5, 10);
+
+insert into mouvementstock(entree, datemouvement, idArticle, idUnite, prixunitaire) values (500, CURRENT_TIMESTAMP, 13, 1, 300);

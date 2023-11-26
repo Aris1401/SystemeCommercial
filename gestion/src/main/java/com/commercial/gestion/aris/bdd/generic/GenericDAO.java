@@ -272,6 +272,7 @@ public class GenericDAO<T> implements Serializable {
 		// Obtenir l'attribut avec annotation primary key
 		Field pkField = null;
 		for (Field field : currentObjectFields) {
+			field.setAccessible(true);
 			if (field.isAnnotationPresent(PrimaryKey.class)) {
 				pkField = field;
 				break;

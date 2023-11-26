@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class Response<T> {
-    Timestamp dateCreation;
+    Timestamp dateCreation = new Timestamp(System.currentTimeMillis());
     ArrayList<T> data;
     String errorMessage;
 
