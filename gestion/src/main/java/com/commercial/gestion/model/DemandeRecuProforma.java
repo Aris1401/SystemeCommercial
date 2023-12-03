@@ -1,5 +1,6 @@
 package com.commercial.gestion.model;
 
+import com.commercial.gestion.aris.bdd.generic.GenericDAO;
 import com.commercial.gestion.configuration.DemandeConfiguration;
 import com.commercial.gestion.dbAccess.ConnectTo;
 
@@ -7,14 +8,14 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class DemandeRecuProforma {
-    private int idDemandeRecuProforma;
-    private int idFournisseurFrom;
-    private String lienEmail;
-    private int quantite;
-    private int idArticle;
-    private int idUnite;
-    private Timestamp dateDemande;
-    private int etat;
+    int idDemandeRecuProforma;
+    int idFournisseurFrom;
+    String lienEmail;
+    int quantite;
+    int idArticle;
+    int idUnite;
+    Timestamp dateDemande;
+    int etat;
 
     public int getIdDemandeRecuProforma() {
         return idDemandeRecuProforma;
@@ -93,6 +94,22 @@ public class DemandeRecuProforma {
         this.setIdUnite(idUnite);
         this.setDateDemande(dateDemande);
         this.setEtat(etat);
+    }
+
+    public Unite getUnite() {
+        return Unite.getById(idUnite);
+    }
+
+    public Article getArticle() {
+        return Article.getArticleById(idArticle);
+    }
+
+    public Fournisseur getFournisseur() {
+        return Fournisseur.getFournisseurById(idFournisseurFrom);
+    }
+
+    public String getStatusString() {
+        return DemandeConfiguration.getStatusString(etat);
     }
 
     public static DemandeRecuProforma getById(int id)throws Exception{
@@ -226,7 +243,7 @@ public class DemandeRecuProforma {
         ArrayList<DemandeRecuProforma> demandes = new ArrayList<>();
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        String query = "SELECT * FROM DemandeRecuProforma WHERE etat = 0";
+        String query = "SELECT * FROM DemandeRecuProforma WHERE etat = " + DemandeConfiguration.EN_COURS;
 
         try {
             connection = ConnectTo.postgreS();
@@ -325,5 +342,25 @@ public class DemandeRecuProforma {
             }
         }
         return demandes;
+    }
+
+    public static boolean checkIfExists(String emailId) {
+        GenericDAO<DemandeRecuProforma> demandeRecuProformaGenericDAO = new GenericDAO<>(DemandeRecuProforma.class);
+
+        boolean exists = false;
+        Connection c = null;
+        try {
+            c = ConnectTo.postgreS();
+
+            demandeRecuProformaGenericDAO.addToSelection("lienEmail", emailId, "");
+            ArrayList<DemandeRecuProforma> demandeRecuProformas = demandeRecuProformaGenericDAO.getFromDatabase(c);
+            exists = !demandeRecuProformas.isEmpty();
+
+            c.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return exists;
     }
 }

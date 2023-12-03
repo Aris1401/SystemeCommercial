@@ -7,9 +7,11 @@ import {
   cilCursor,
   cilDescription,
   cilDrop,
+  cilInbox,
   cilNotes,
   cilPencil,
   cilPuzzle,
+  cilSettings,
   cilSpeedometer,
   cilSpreadsheet,
   cilStar,
@@ -356,6 +358,24 @@ const _nav = [
         to: '/sortiestock'
       }
     ]
+  },
+  {
+    component: CNavGroup,
+    name: 'Boite',
+    icon: <CIcon icon={cilInbox} className='nav-icon' />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Demandes de proformas',
+        to: '/inbox/proformas'
+      }
+    ]
+  },
+  {
+    component: CNavItem,
+    name: 'Accessibilite',
+    icon: <CIcon icon={cilSettings} customClassName="nav-icon"/>,
+    to: '/accessibilite'
   }
 ]
 

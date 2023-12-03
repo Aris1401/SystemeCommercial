@@ -99,10 +99,6 @@ public class ProformaCoteFournisseur {
         return allProformas;
     }
 
-    public DemandeProformaCoteFournisseur getDemande()throws Exception{
-        return DemandeProformaCoteFournisseur.getById(this.getIdDemandeProformaCoteFournisseur());
-    }
-
     public void inserer()throws Exception{
         Connection connection = null;
         PreparedStatement preparedStatement = null;

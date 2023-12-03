@@ -130,7 +130,7 @@ public class DemandeProforma extends BDD
         DemandeProforma.validerDemandeProforma(idDemandeProforma);
     }
 
-    public static void validerDemandeProforma(int idDemandeProforma) {
+    public static void  validerDemandeProforma(int idDemandeProforma) {
         GenericDAO<DemandeProforma> demandeProformaGenericDAO = new GenericDAO<>(DemandeProforma.class);
 
         try {

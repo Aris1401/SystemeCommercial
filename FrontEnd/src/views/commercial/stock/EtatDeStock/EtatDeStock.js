@@ -1,10 +1,17 @@
-import { CCard, CCardBody, CCardHeader, CCardTitle, CCol, CFormSelect, CRow, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react';
-import React, { useEffect, useState } from 'react'
+import { CButton, CCard, CCardBody, CCardHeader, CCardTitle, CCol, CFormSelect, CRow, CTable, CTableBody, CTableDataCell, CTableHead, CTableHeaderCell, CTableRow } from '@coreui/react';
+import React, { useEffect, useRef, useState } from 'react'
 import { makeRequest } from 'src/Api';
+import { getArticles, getUnites } from '../../besoinAchat/components/SelectionArticle';
 
 export const getEtatDeStock = (idArticle, idUnite) => {
+    if (idArticle === "-1") idArticle = undefined;
+    if (idUnite === "-1") idUnite = undefined;
+
+    console.log("Article: " + idArticle + " | Unite: " + idUnite);
+
     var url = `/etatdestock`;
     if (idArticle && !idUnite) url = `etatdestock/article/${idArticle}`;
+    else if (!idArticle && idUnite) url = `etatdestock/unite/${idUnite}`
     else if (idUnite && idArticle) url = `etatdestock/article/${idArticle}/unite/${idUnite}`;
 
     return new Promise((resolve, reject) => {
@@ -24,13 +31,38 @@ export const getEtatDeStock = (idArticle, idUnite) => {
 const EtatDeStock = () => {
     const [ update, setUpdate ] = useState(false);
 
+    // Filtres
+    const uniteRef = useRef()
+    const articleRef = useRef()
+
     // Etat de stock
     const [ etatDeStock, setEtatDeStock ] = useState();
     useEffect(() => {
-        getEtatDeStock().then((data) => {
+        getEtatDeStock(articleRef.current.value, uniteRef.current.value).then((data) => {
             setEtatDeStock(data.data[0])
         })
     }, [update])
+
+    
+    // Articles
+    const [ articleSelection, setArticleSelection ] = useState([])
+    useEffect(() => {
+        getArticles().then((data) => {
+            data.map((article) => {
+                setArticleSelection(prev => [...prev, {label: article.nom, value: article.idArticle}])
+            })
+        })
+    }, [update])
+
+    // Unites
+    const [ uniteSelection, setUniteSelection ] = useState([])
+    useEffect(() => {
+        getUnites().then((data) => {
+            data.map((unite) => {
+                setUniteSelection(prev => [...prev, {label: unite.nom, value: unite.idUnite}])
+            })
+        })
+    }, [])
 
   return (
     <CCard>
@@ -48,8 +80,17 @@ const EtatDeStock = () => {
                     </div>
 
                     <div className='d-flex gap-2'>
-                        <CFormSelect style={{ width: '200px' }} floatingLabel="Article" options={[]}/>
-                        <CFormSelect style={{ width: '200px' }} floatingLabel="Unite" options={[]}/>
+                        <CFormSelect ref={articleRef} style={{ width: '200px' }} floatingLabel="Article" options={
+                            [{label: 'All', value: -1}, ...articleSelection]
+                            }/>
+                        <CFormSelect ref={uniteRef} style={{ width: '200px' }} floatingLabel="Unite" options={
+                            [{label: 'All', value: -1}, ...uniteSelection]
+                            }/>
+                        <CButton
+                            onClick={(e) => {
+                                setUpdate(!update)
+                            }}
+                        >Filtrer</CButton>
                     </div>
                 </CCol>
             </CRow>
@@ -72,26 +113,26 @@ const EtatDeStock = () => {
                             { etatDeStock && etatDeStock.ligneStocks.map((ligneStock, index) => {
                                 return (
                                     <CTableRow key={index}>
-                                        <CTableDataCell>{ new Date(ligneStock.dateCourante).toLocaleString() }</CTableDataCell>
+                                        <CTableDataCell>{ ligneStock && new Date(ligneStock.dateCourante).toLocaleString() }</CTableDataCell>
                                         <CTableDataCell>
                                             <p className='badge text-bg-secondary text-wrap'>
-                                                { ligneStock.article.nom }
+                                                { ligneStock && ligneStock.article.nom }
                                             </p>
                                         </CTableDataCell>
                                         <CTableDataCell>
-                                            { ligneStock.quantite }
+                                            { ligneStock && ligneStock.quantite }
                                         </CTableDataCell>
                                         <CTableDataCell>
-                                            { ligneStock.unite.nom }
+                                            { ligneStock && ligneStock.unite.nom }
                                         </CTableDataCell>
                                         <CTableDataCell>
                                             <p className='text-medium-emphasis'>
-                                                { ligneStock.montant } Ar
+                                                { ligneStock && ligneStock.montant } Ar
                                             </p>
                                         </CTableDataCell>
                                         <CTableDataCell>
                                             <p className='text-medium-emphasis'>
-                                                { ligneStock.prixUnitaireMoyen } Ar
+                                                { ligneStock && ligneStock.prixUnitaireMoyen } Ar
                                             </p>
                                         </CTableDataCell>
                                     </CTableRow>
