@@ -127,3 +127,13 @@ INSERT INTO ConfigurationValues (designation, valeur) VALUES ('company-name', 'C
 --String idFournisseur = ConfigurationValues.getConfigurationValue("company-id");
 --        String email = ConfigurationValues.getConfigurationValue("company-email");
 --        String name = ConfigurationValues.getConfigurationValue("company-name");
+
+INSERT INTO Profil (nom, idService)
+    VALUES
+      ('Admin', NULL);
+
+INSERT INTO Utilisateur (nom, prenom, email, motDePasse, idTypeUtilisateur)
+    VALUES
+      ('admin', 'admin', 'admin', 'root', 1);
+
+          INSERT INTO ProfilUtilisateur (idUtilisateur, idProfil, dateAjout) VALUES (7, 13, CURRENT_TIMESTAMP);

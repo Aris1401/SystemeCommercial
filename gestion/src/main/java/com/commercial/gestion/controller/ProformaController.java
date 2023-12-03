@@ -57,6 +57,7 @@ public class ProformaController {
     public ProformaArticleBesoinAchat ajouterProformaDepuisArticleBesoinAchat(@RequestBody Proforma proforma, @PathVariable("idArticleBesoinAchat") int idArticleBesoinAchat) {
         proforma.dontSave("idProforma");
         proforma.setDateObtention(new Timestamp(System.currentTimeMillis()));
+        proforma.setIdUnite(1);
         int idProforma = proforma.saveId();
 
         System.out.println(idArticleBesoinAchat );

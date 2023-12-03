@@ -1,6 +1,6 @@
 import { cilArrowLeft, cilArrowRight, cilArrowThickRight } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
-import { CCard, CCardBody, CCardTitle, CCol, CRow, CTable, CTableHeaderCell, CTableRow, CTableHead, CTableBody, CTableDataCell, CButton, CNavLink } from '@coreui/react'
+import { CCard, CCardBody, CCardTitle, CCol, CRow, CTable, CTableHeaderCell, CTableRow, CTableHead, CTableBody, CTableDataCell, CButton, CNavLink, CCardHeader, CFormSelect } from '@coreui/react'
 import React, { useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { makeRequest } from 'src/Api'
@@ -21,6 +21,13 @@ export const getBonDeCommandes = () => {
 }
 
 const BonDeCommande = () => {
+	// Status
+	const [ status, setStatus ] = useState(0)
+	const filtres = [
+		{label: 'En cours', value: 0},
+		{label: 'Fermees', value: 10},
+	]
+	
 	// Obtenir les bons de commandes
 	const [ bonDeCommandes, setBonDeCommandes ] = useState([])
 	useEffect(() => {
@@ -29,14 +36,23 @@ const BonDeCommande = () => {
 		}) 
 	}, [])
 
+
 	return (
 		<CCard className='p-2'>
-			<CCardBody>
+			<CCardHeader>
 				<CCardTitle>
 					<h6>Bon de commandes</h6>
 				</CCardTitle>
+			</CCardHeader>
 
+			<CCardBody>
 				<CRow>
+					<CCol className='d-flex align-items-end'>
+						<CFormSelect floatingLabel="Filtre" options={filtres} onChange={(e) => {setStatus(e.target.value)}}/>
+					</CCol>
+				</CRow>
+
+				<CRow className='mt-3'>
 					<CCol>
 						<CTable>
 							<CTableHead>
@@ -55,7 +71,7 @@ const BonDeCommande = () => {
 
 							<CTableBody>
 								{ bonDeCommandes.map((bonDeCommande, index) => {
-									return (
+									return bonDeCommande.statusBonDeCommande <= status ? (
 										<CTableRow key={index}>
 											<CTableDataCell>
 												<p style={{ fontSize: '.8rem' }} className='fw-bold'>
@@ -115,8 +131,8 @@ const BonDeCommande = () => {
 												</CNavLink>
 											</CTableDataCell>
 										</CTableRow>
-									)
-								}) }
+									) : null
+								})}
 							</CTableBody>
 						</CTable>
 					</CCol>

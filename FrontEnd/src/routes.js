@@ -10,6 +10,8 @@ import EtatDeStock from './views/commercial/stock/EtatDeStock/EtatDeStock'
 import AjoutStock from './views/commercial/stock/AjoutStock/AjoutStock'
 import SortieStock from './views/commercial/stock/SortieStock/SortieStock'
 import DemandesProformaRecu from './views/commercial/inbox/DemandeProformaRecu/DemandesProformaRecu'
+import Accessibilte from './views/commercial/accessibility/Accessibilte'
+import { makeRequest } from './Api'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
@@ -61,51 +63,8 @@ const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
 
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
-const routes = [
+export const _routes = [
   { path: '/', exact: true, name: 'Home' },
-  { path: '/dashboard', name: 'Dashboard', element: Dashboard },
-  { path: '/theme', name: 'Theme', element: Colors, exact: true },
-  { path: '/theme/colors', name: 'Colors', element: Colors },
-  { path: '/theme/typography', name: 'Typography', element: Typography },
-  { path: '/base', name: 'Base', element: Cards, exact: true },
-  { path: '/base/accordion', name: 'Accordion', element: Accordion },
-  { path: '/base/breadcrumbs', name: 'Breadcrumbs', element: Breadcrumbs },
-  { path: '/base/cards', name: 'Cards', element: Cards },
-  { path: '/base/carousels', name: 'Carousel', element: Carousels },
-  { path: '/base/collapses', name: 'Collapse', element: Collapses },
-  { path: '/base/list-groups', name: 'List Groups', element: ListGroups },
-  { path: '/base/navs', name: 'Navs', element: Navs },
-  { path: '/base/paginations', name: 'Paginations', element: Paginations },
-  { path: '/base/placeholders', name: 'Placeholders', element: Placeholders },
-  { path: '/base/popovers', name: 'Popovers', element: Popovers },
-  { path: '/base/progress', name: 'Progress', element: Progress },
-  { path: '/base/spinners', name: 'Spinners', element: Spinners },
-  { path: '/base/tables', name: 'Tables', element: Tables },
-  { path: '/base/tooltips', name: 'Tooltips', element: Tooltips },
-  { path: '/buttons', name: 'Buttons', element: Buttons, exact: true },
-  { path: '/buttons/buttons', name: 'Buttons', element: Buttons },
-  { path: '/buttons/dropdowns', name: 'Dropdowns', element: Dropdowns },
-  { path: '/buttons/button-groups', name: 'Button Groups', element: ButtonGroups },
-  { path: '/charts', name: 'Charts', element: Charts },
-  { path: '/forms', name: 'Forms', element: FormControl, exact: true },
-  { path: '/forms/form-control', name: 'Form Control', element: FormControl },
-  { path: '/forms/select', name: 'Select', element: Select },
-  { path: '/forms/checks-radios', name: 'Checks & Radios', element: ChecksRadios },
-  { path: '/forms/range', name: 'Range', element: Range },
-  { path: '/forms/input-group', name: 'Input Group', element: InputGroup },
-  { path: '/forms/floating-labels', name: 'Floating Labels', element: FloatingLabels },
-  { path: '/forms/layout', name: 'Layout', element: Layout },
-  { path: '/forms/validation', name: 'Validation', element: Validation },
-  { path: '/icons', exact: true, name: 'Icons', element: CoreUIIcons },
-  { path: '/icons/coreui-icons', name: 'CoreUI Icons', element: CoreUIIcons },
-  { path: '/icons/flags', name: 'Flags', element: Flags },
-  { path: '/icons/brands', name: 'Brands', element: Brands },
-  { path: '/notifications', name: 'Notifications', element: Alerts, exact: true },
-  { path: '/notifications/alerts', name: 'Alerts', element: Alerts },
-  { path: '/notifications/badges', name: 'Badges', element: Badges },
-  { path: '/notifications/modals', name: 'Modals', element: Modals },
-  { path: '/notifications/toasts', name: 'Toasts', element: Toasts },
-  { path: '/widgets', name: 'Widgets', element: Widgets },
   { path: '/besoinsachat/*', name: 'Besoins Achat', element: BesoinAchat },
   { path: '/detailsbesoinachat/:idBesoinAchat', name: 'Details Besoin Achat', element: DetailsBesoinAchat },
   { path: '/bondecommandes', name: 'Bon de commande', element: BonDeCommande },
@@ -116,7 +75,41 @@ const routes = [
   { path: '/etatstock', name: 'Etat de stock', element: EtatDeStock },
   { path: '/ajoutstock', name: 'Ajout stock', element: AjoutStock },
   { path: '/sortiestock', name: 'Sortie stock', element: SortieStock },
-  { path: '/inbox/proformas', name: 'Demandes proforma', element: DemandesProformaRecu }
+  { path: '/inbox/proformas', name: 'Demandes proforma', element: DemandesProformaRecu },
+  { path: '/accessibilite', name: 'Accessibiltes', element: Accessibilte}
 ]
 
+const getFilteredRoutes = (routes) => {
+  let routesString = []
+  routes.map((route, index) => {
+    routesString = [...routesString, route.path]
+  })
+
+  return new Promise((resolve, reject) => {
+      makeRequest({
+        url: 'accessibilite/filter',
+        requestType: 'POST',
+        values: routesString,
+        successCallback: (data) => {
+          resolve(data)
+        },
+        failureCallback: (error) => {
+          reject(error)
+        }
+      })
+  });
+}
+
+const processRoutes = async (routes) => {
+  let newRoutes;
+
+  const filteredRoutes = await getFilteredRoutes(routes);
+  newRoutes = routes.filter((route) => filteredRoutes.includes(route.path));
+
+  return newRoutes || [];
+};
+
+
+const routes = await processRoutes(_routes);
+console.log(routes)
 export default routes

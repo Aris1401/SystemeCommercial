@@ -10,6 +10,7 @@ import com.commercial.gestion.aris.bdd.generic.GenericDAO;
 import com.commercial.gestion.dbAccess.ConnectTo;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 
 /**
  *
@@ -61,5 +62,20 @@ public class Profil
         }
 
         return profil;
+    }
+
+    public static ArrayList<Profil> getAllProfils() {
+        GenericDAO<Profil> profilGenericDAO = new GenericDAO<>(Profil.class);
+        try {
+            Connection c = ConnectTo.postgreS();
+
+            ArrayList<Profil> profils = profilGenericDAO.getFromDatabase(c);
+
+            c.close();
+
+            return profils;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -294,3 +294,10 @@ create table UniteEquivalence (
     idArticle INT REFERENCES Article(idArticle),
     quantite DECIMAL DEFAULT 0
 );
+
+-- Accessibilties pages
+create table profilNonAccessiblePage(
+    idNonAccessiblePage serial PRIMARY KEY,
+    idProfile int REFERENCES Profil(idProfil),
+    nonAccessiblePage VARCHAR(255)
+);

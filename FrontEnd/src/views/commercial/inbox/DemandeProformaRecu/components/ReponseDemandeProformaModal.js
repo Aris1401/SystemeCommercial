@@ -41,10 +41,13 @@ const ReponseDemandeProformaModal = forwardRef((props, ref) => {
         if (demandeRecu) {
             getEtatDeStock(demandeRecu.article.idArticle, demandeRecu.unite.idUnite).then((data) => {
                 let stock = data.data[0]
-                stock.ligneStocks.map((ligne) => {
-                    setQuantite(ligne.quantite)
-                    setPrixUnitaire(ligne.prixUnitaireMoyen)
-                })
+                    stock.ligneStocks.map((ligne) => {
+                        if (ligne) {
+                            setQuantite(ligne.quantite)
+                            setPrixUnitaire(ligne.prixUnitaireMoyen)
+                        }
+                    })
+                
             })
         }
     }, [demandeRecu])
@@ -105,7 +108,8 @@ const ReponseDemandeProformaModal = forwardRef((props, ref) => {
                 </CRow>
             </CModalBody>
 
-            <CModalFooter  className='d-flex justify-content-between'>
+            
+            {(quantite > 0) && <CModalFooter  className='d-flex justify-content-between'>
                 
                         <CNavLink component={NavLink} to='/etatstock'>
                             <CButton>Afficher etat de stock</CButton>
@@ -114,7 +118,7 @@ const ReponseDemandeProformaModal = forwardRef((props, ref) => {
                             onClick={handleReponseSubmit}
                         >Envoyer</CButton>
                     
-            </CModalFooter>
+            </CModalFooter>}
         </CModal>
     )
 });

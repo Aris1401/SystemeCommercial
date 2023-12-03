@@ -11,6 +11,7 @@ import {
   cilNotes,
   cilPencil,
   cilPuzzle,
+  cilSettings,
   cilSpeedometer,
   cilSpreadsheet,
   cilStar,
@@ -369,6 +370,12 @@ const _nav = [
         to: '/inbox/proformas'
       }
     ]
+  },
+  {
+    component: CNavItem,
+    name: 'Accessibilite',
+    icon: <CIcon icon={cilSettings} customClassName="nav-icon"/>,
+    to: '/accessibilite'
   }
 ]
 
