@@ -21,6 +21,7 @@ import java.util.Comparator;
 public class Proforma extends BDD {
     int idProforma;
     int idFournisseur;
+    int idUnite;
     Timestamp dateObtention;
     double prixUnitaire;
     double quantite;
@@ -74,6 +75,14 @@ public class Proforma extends BDD {
         this.idArticle = idArticle;
     }
 
+    public int getIdUnite() {
+        return idUnite;
+    }
+
+    public void setIdUnite(int idUnite) {
+        this.idUnite = idUnite;
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     public ArrayList<Proforma> allProforma() {
         Proforma proforma = new Proforma();
@@ -96,6 +105,28 @@ public class Proforma extends BDD {
     ////////////////////////////////////////////////////////////////////////////
     public Fournisseur getFournisseur() {
         return Fournisseur.getFournisseurById(idFournisseur);
+    }
+
+    public Article getArticle() {
+        return Article.getArticleById(idArticle);
+    }
+
+    public Unite getUnite() {
+        return Unite.getById(idUnite);
+    }
+
+    public double getMontant() {
+        return getQuantite() * getPrixUnitaire();
+    }
+
+    public double getTVA() {
+        final double TVA = Double.parseDouble(ConfigurationValues.getConfigurationValue("TVA"));
+        double prixTVA = getMontant() * (TVA / 100);
+        return prixTVA;
+    }
+
+    public double getMontantTTC() {
+        return getMontant() + getTVA();
     }
 
     public ArrayList<Proforma> allProformaForArticle(int idArticle) {
@@ -229,5 +260,42 @@ public class Proforma extends BDD {
         }
 
         return moisDixAns;
+    }
+
+    public static Proforma obtenirById(int idProforma) {
+        GenericDAO<Proforma> proformaGenericDAO = new GenericDAO<>(Proforma.class);
+
+        try {
+            Connection c = ConnectTo.postgreS();
+
+            proformaGenericDAO.addToSelection("idProforma", idProforma, "");
+            ArrayList<Proforma> proformas = proformaGenericDAO.getFromDatabase(c);
+
+            c.close();
+
+            return proformas.isEmpty() ? null : proformas.get(0);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Proforma convertirDemandeRecu(ReponseDemandeRecuProforma reponse) {
+        Proforma proforma = new Proforma();
+
+        DemandeRecuProforma demandeRecuProforma = null;
+        try {
+            demandeRecuProforma = reponse.getDemandeRecuFournisseurProforma();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        proforma.setDateObtention(reponse.getDateReponse());
+        proforma.setIdUnite(demandeRecuProforma.idUnite);
+        proforma.setIdArticle(demandeRecuProforma.idArticle);
+        proforma.setIdFournisseur(Fournisseur.getCompany().idFournisseur);
+        proforma.setPrixUnitaire(reponse.getPrixUnitaire());
+        proforma.setQuantite(reponse.getQuantite());
+
+        return proforma;
     }
 }

@@ -140,10 +140,13 @@ create table Proforma(
     prixUnitaire DECIMAL,
     quantite DECIMAL,
     idArticle int,
+    idUnite int REFERENCES Unite(idUnite) DEFAULT 1,
     PRIMARY KEY(idProforma),
     FOREIGN KEY(idFournisseur) REFERENCES  Fournisseur(idFournisseur),
     FOREIGN KEY(idArticle) REFERENCES Article (idArticle)
 );
+
+-- ALTER TABLE Proforma ADD COLUMN idUnite int REFERENCES Unite(idUnite) DEFAULT 1;
 
 create table ModeDePaiement(
     idModeDePaiement serial,
@@ -290,4 +293,11 @@ create table UniteEquivalence (
     idUnite INT REFERENCES Unite(idUnite),
     idArticle INT REFERENCES Article(idArticle),
     quantite DECIMAL DEFAULT 0
+);
+
+-- Accessibilties pages
+create table profilNonAccessiblePage(
+    idNonAccessiblePage serial PRIMARY KEY,
+    idProfile int REFERENCES Profil(idProfil),
+    nonAccessiblePage VARCHAR(255)
 );

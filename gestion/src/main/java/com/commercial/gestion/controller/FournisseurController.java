@@ -2,7 +2,9 @@ package com.commercial.gestion.controller;
 
 import com.commercial.gestion.aris.bdd.generic.GenericDAO;
 import com.commercial.gestion.dbAccess.ConnectTo;
+import com.commercial.gestion.model.ConfigurationValues;
 import com.commercial.gestion.model.Fournisseur;
+import com.commercial.gestion.response.Response;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Connection;
@@ -28,6 +30,16 @@ public class FournisseurController {
     public Fournisseur getFournisseur(@PathVariable("id") int id) {
         Fournisseur fournisseur = Fournisseur.getFournisseurById(id);
         return fournisseur;
+    }
+
+    @GetMapping("/fournisseurs/own")
+    public Response<Fournisseur> getCompany() {
+        Fournisseur fournisseur = Fournisseur.getCompany();
+
+        Response<Fournisseur> fournisseurResponse = new Response<>();
+        fournisseurResponse.addToData(fournisseur);
+
+        return fournisseurResponse;
     }
 
     @PostMapping("/fournisseurs/update")

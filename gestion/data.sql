@@ -119,3 +119,21 @@ insert into unite(nom) values ('Paquet');
 insert into uniteequivalence(idArticle, idUnite, quantite) values (13, 1, 1), (13, 5, 10);
 
 insert into mouvementstock(entree, datemouvement, idArticle, idUnite, prixunitaire) values (500, CURRENT_TIMESTAMP, 13, 1, 300);
+
+INSERT INTO ConfigurationValues (designation, valeur) VALUES ('company-id', '0');
+INSERT INTO ConfigurationValues (designation, valeur) VALUES ('company-email', 'cest.arisaina@gmail.com');
+INSERT INTO ConfigurationValues (designation, valeur) VALUES ('company-name', 'Commercant');
+
+--String idFournisseur = ConfigurationValues.getConfigurationValue("company-id");
+--        String email = ConfigurationValues.getConfigurationValue("company-email");
+--        String name = ConfigurationValues.getConfigurationValue("company-name");
+
+INSERT INTO Profil (nom, idService)
+    VALUES
+      ('Admin', NULL);
+
+INSERT INTO Utilisateur (nom, prenom, email, motDePasse, idTypeUtilisateur)
+    VALUES
+      ('admin', 'admin', 'admin', 'root', 1);
+
+          INSERT INTO ProfilUtilisateur (idUtilisateur, idProfil, dateAjout) VALUES (7, 13, CURRENT_TIMESTAMP);
