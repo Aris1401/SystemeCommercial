@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import com.commercial.gestion.configuration.DemandeConfiguration;
 
 public class DemandeProformaCoteFournisseur {
+    public static final String CSV_SAVE_PATH = "./demandes";
     private int idDemandeProformaCoteFournisseur;
     private Timestamp dateDemande;
     private int idArticle;
@@ -94,7 +95,7 @@ public class DemandeProformaCoteFournisseur {
         this.setLienEmail(lienEmail);
     }
 
-    public static DemandeProformaCoteFournisseur getById(int id)throws Exception{
+    public static DemandeProformaCoteFournisseur obtenirById(int id)throws Exception{
         Connection connection = null;
         DemandeProformaCoteFournisseur demande = null;
         PreparedStatement preparedStatement = null;
@@ -155,7 +156,7 @@ public class DemandeProformaCoteFournisseur {
         String query = "INSERT INTO DemandeProformaCoteFournisseur (dateDemande, idArticle, idUnite, quantite, idFournisseur, etat, lienEmail) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
             if(connection == null)connection = ConnectTo.postgreS();
-            preparedStatement = connection.prepareStatement(query);
+            preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setTimestamp(1, this.getDateDemande());
             preparedStatement.setInt(2, this.getIdArticle());
             preparedStatement.setInt(3, this.getIdUnite());
@@ -165,6 +166,10 @@ public class DemandeProformaCoteFournisseur {
             preparedStatement.setString(7, this.getLienEmail());
 
             preparedStatement.executeUpdate();
+            ResultSet res = preparedStatement.getGeneratedKeys();
+            if (res.next()) {
+                idDemandeProformaCoteFournisseur = res.getInt(1);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -221,7 +226,7 @@ public class DemandeProformaCoteFournisseur {
         }
     }
 
-    public static ArrayList<DemandeProformaCoteFournisseur> getAllDemandesOuvertes()throws Exception{
+    public static ArrayList<DemandeProformaCoteFournisseur> obtenirAllDemandesOuvertes()throws Exception{
         Connection connection = null;
         ArrayList<DemandeProformaCoteFournisseur> demandes = new ArrayList<>();
         PreparedStatement preparedStatement = null;
@@ -276,7 +281,7 @@ public class DemandeProformaCoteFournisseur {
         return demandes;
     }
 
-    public static ArrayList<DemandeProformaCoteFournisseur> getAllDemandesFermees()throws Exception{
+    public static ArrayList<DemandeProformaCoteFournisseur> obtenirAllDemandesFermees()throws Exception{
         Connection connection = null;
         ArrayList<DemandeProformaCoteFournisseur> demandes = new ArrayList<>();
         PreparedStatement preparedStatement = null;
@@ -332,7 +337,18 @@ public class DemandeProformaCoteFournisseur {
     }
 
     public boolean isValider(){
-        if(this.getEtat() == 10)return true;
-        return false;
+        return this.getEtat() == DemandeConfiguration.VALIDER;
+    }
+
+    public Article obtenirArticle() {
+        return Article.getArticleById(idArticle);
+    }
+
+    public Unite obtenirUnite() {
+        return Unite.getById(idUnite);
+    }
+
+    public Fournisseur obtenirFournisseur() {
+        return Fournisseur.getFournisseurById(idFournisseur);
     }
 }

@@ -24,6 +24,11 @@ public class BesoinAchatController {
         return BesoinAchat.allClosedBesoinAchat();
     }
 
+    @GetMapping("/besoinsachat/nature")
+    public ArrayList<BesoinAchatEnNature> besoinAchatsEnNature() {
+        return BesoinAchatEnNature.obtenirBesoinsEnNature();
+    }
+
     @GetMapping("/besoinsachat/{idBesoinAchat}")
     public BesoinAchat getBesoinAchat(@PathVariable("idBesoinAchat") int idBesoinAchat) {
         return BesoinAchat.getBesoinAchatById(idBesoinAchat);

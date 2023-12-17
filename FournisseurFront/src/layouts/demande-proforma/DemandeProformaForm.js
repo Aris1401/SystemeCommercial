@@ -36,15 +36,48 @@ export const getUnites = () => {
     })
 }
 
+export const getFournisseurs = () => {
+    return new Promise((resolve, reject) => {
+        makeRequest({
+            url: '/fournisseurs/own',
+            requestType: 'GET',
+            successCallback: (data) => {
+                resolve(data)
+            },
+            failureCallback: (error) => {
+                reject(error)
+            }
+        })
+    });
+}
+
+export const sendDemande = (data) => {
+    return new Promise((resolve, reject) => {
+        makeRequest({
+            url: `/demandeproforma/fournisseur`,
+            requestType: 'POST',
+            values: data,
+            successCallback: (data) => {
+                resolve(data)
+            },
+            failureCallback: (error) => {
+                reject(error)
+            }
+        })
+    });
+}
+
 const DemandeProformaForm = () => {
     // Input values
     const [fournisseur, setFournisseur] = useState('')
     const [article, setArticle] = useState('')
     const [unite, setUnite] = useState('')
+    const [ quantite, setQuantite ] = useState('')
 
     // Selects
     const [ articles, setArticles ] = useState([])
     const [ unites, setUnites ] = useState([])
+    const [ fournisseurs, setFournisseurs ] = useState([])
     useEffect(() => {
         getArticles().then((data) => {
             setArticles(data)
@@ -53,10 +86,23 @@ const DemandeProformaForm = () => {
         getUnites().then((data) => {
             setUnites(data)
         })
+
+        getFournisseurs().then((data) => {
+            setFournisseurs(data.data)
+        })
     }, [])    
 
     const handleFaireDemandeButton = (e) => {
-        
+        let demande = {
+            idArticle: article,
+            idFournisseur: fournisseur,
+            idUnite: unite,
+            quantite: quantite
+        }
+
+        sendDemande(demande).then((data) => {
+            console.log(data)
+        })
     }
 
     return (
@@ -82,7 +128,9 @@ const DemandeProformaForm = () => {
                                     setFournisseur(e.target.value)
                                 }}
                             >
-                                <MenuItem value={10}>Our company</MenuItem>
+                                { fournisseurs.map((fournisseur, index) => {
+                                    return <MenuItem key={fournisseur.nom} value={fournisseur.idFournisseur}>{ fournisseur.nom }</MenuItem>
+                                }) }
                             </Select>
                         </FormControl>
                     </Box>
@@ -109,7 +157,7 @@ const DemandeProformaForm = () => {
 
                     <Box marginTop={2} display={'flex'} gap={3} alignItems={'center'}>
                         <FormControl style={{ width: '50%', height: '3rem' }}>
-                            <TextField label="Quantite" />
+                            <TextField value={quantite} onChange={(e) => { setQuantite(e.target.value) }} label="Quantite" />
                         </FormControl>
 
                         <FormControl style={{ width: '50%' }}>
@@ -133,7 +181,7 @@ const DemandeProformaForm = () => {
                     </Box>
 
                     <Box marginTop={2}>
-                        <Button fullWidth variant='contained' color='primary'>Faire une demande</Button>
+                        <Button onClick={handleFaireDemandeButton} fullWidth variant='contained' color='primary'>Faire une demande</Button>
                     </Box>
                 </CardContent>
             </Card>

@@ -1,6 +1,7 @@
 package com.commercial.gestion.controller;
 
 import com.commercial.gestion.model.BonDeCommande;
+import com.commercial.gestion.model.BonDeCommandeEnvoie;
 import com.commercial.gestion.model.ModeDePaiement;
 import com.commercial.gestion.model.Utilisateur;
 import com.commercial.gestion.repository.ModeDePaiementRepository;
@@ -69,5 +70,10 @@ public class BonDeCommandeController {
     public void ajouterDateDeLivraison(@RequestParam("dateLivraison") String dateLivraison, @PathVariable("idBonDeCommande") int idBonDeCommande) {
         BonDeCommande bonDeCommande = BonDeCommande.obtenirBonDeCommandeAvec(idBonDeCommande);
         bonDeCommande.ajouterDateDeLivraison(Timestamp.valueOf(LocalDateTime.parse(dateLivraison)));
+    }
+
+    @PostMapping("/bondecommandes/{bondecommande}/fournisseur/{fournisseur}/envoie")
+    public boolean envoyerBonDeCommande(HttpSession session,@PathVariable("bondecommande") int idBonDeCommande, @PathVariable("fournisseur") int idFournisseur)throws Exception{
+        return BonDeCommandeEnvoie.envoyerBonDeCommandeVersFournisseur((Utilisateur)session.getAttribute("user"),idBonDeCommande,idFournisseur);
     }
 }

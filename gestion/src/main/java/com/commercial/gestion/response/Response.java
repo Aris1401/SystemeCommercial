@@ -38,4 +38,10 @@ public class Response<T> {
         if (this.data == null) data = new ArrayList<>();
         data.add(dataItem);
     }
+
+    public T getFirstData() {
+        if (this.getData().isEmpty()) return null;
+
+        else return this.getData().get(0);
+    }
 }

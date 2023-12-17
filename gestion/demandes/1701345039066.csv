@@ -1,0 +1,2 @@
+IdFournisseur,Quantite,IdUnite,IdArticle,Etat,DateDemande,LienEmail,Valider,IdDemandeProformaCoteFournisseur
+0,2,1,13,0,2023-11-30 14:50:39.066,/home/aris/S5-ITU/GestionEntreprise/SystemeCommercial/gestion/demandes/1701345039066.csv,false,0,
