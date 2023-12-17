@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class BonDeCommandeEnvoie {
@@ -99,5 +100,10 @@ public class BonDeCommandeEnvoie {
             throw new Exception("Cet utilisateur n'a pas de profil service achat !!!");
         }
         return b;
+    }
+
+    public static ArrayList<BonDeCommandeEnvoie> obtenirToutLesBonDeCommandesEnvoyer(Utilisateur user)throws Exception{
+        ArrayList<BonDeCommandeEnvoie> allBonDeCommandeEnvoies = new ArrayList<>();
+        return allBonDeCommandeEnvoies;
     }
 }

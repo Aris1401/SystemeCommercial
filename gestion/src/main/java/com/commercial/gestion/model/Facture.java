@@ -89,4 +89,8 @@ public class Facture {
         this.setDateAjout(dateAjout);
         this.setMontantTotal(montantTotal);
     }
+
+    public boolean ajouterFacture(){
+        return false;
+    }
 }
