@@ -68,4 +68,8 @@ public class ArticleFacture {
         this.setQuantite(quantite);
         this.setPrixUnitaireHT(prixUnitaireHT);
     }
+
+    public boolean ajouterArticleFacture(){
+        return false;
+    }
 }
